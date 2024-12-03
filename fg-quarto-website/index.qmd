@@ -14,10 +14,10 @@ about:
 #      text: LinkedIn
 #      href: https://www.linkedin.com/in/marvin-schmitt-a85b321a2/
     - icon: envelope
-      aria-label: Case email
+      aria-label: email
       href: "mailto:afg34@case.edu"
     - icon: envelope
-      aria-label: personal email
+      aria-label: email
       href: "mailto:fvgraham57@gmail.com"  
 ---
 
