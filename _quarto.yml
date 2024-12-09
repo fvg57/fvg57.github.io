@@ -5,9 +5,7 @@ website:
   title: "Francine Graham"    # Your name
   description: "CWRU BME PhD Student"   # A brief slogan (optional)
   image: img/myimage.jpg
-  
-#  favicon: img/favicon.png
-  
+    
   # start of the navigation bar at the top of the website
   navbar:
     pinned: true
@@ -17,19 +15,15 @@ website:
     left:
       - text: "Experience and Education"
         href: experience/index.qmd
-#      - text: "Projects"
-#        href: projects/index.qmd
+      - text: "Dashboard"
+        href: dashboard/dashboard.qmd
+      - text: "blog"
+        href: dashboard/blog.qmd
       - text: "CV"
         href: cv/index.qmd
     
     # your social media handles
     right:
-#      - icon: folder-symlink
-#        href: https://www.marvinschmitt.com/blog/website-tutorial-quarto/
-#      - icon: twitter
-#        href: https://twitter.com/MarvinSchmittML
-#      - icon: linkedin
-#        href: https://www.linkedin.com/in/marvin-schmitt-a85b321a2/
       - icon: envelope
         aria-label: Case email
         href: "mailto:afg34@case.edu"
