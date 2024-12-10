@@ -5,7 +5,7 @@ date: last-modified
 format: 
   dashboard:
     nav-buttons: [github]
-    github: https://github.com/fvg57/fvg57.github.io
+    github: https://github.com/fvg57/dashboard
 theme: default
 fig-width: 10
 fig-asp: 0.3
@@ -18,15 +18,18 @@ editor_options:
 
 ```{r install_packages}
 #install.packages('ggsignif')
+#install.packages('ggpmisc')
 ```
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message=FALSE, warning=FALSE}
 #library(nhanesA) #this does not work
-library(patchwork)
+#library(patchwork)
 library(mosaic)
 library(sessioninfo)
 library(janitor)
 library(naniar)
+library(DT)
+library(ggpmisc)
 library(datawizard)
 library(knitr)
 library(bootstrap)
@@ -111,21 +114,24 @@ This dashboard displays statistics from:
 |              |                        |
 |--------------|------------------------|
 | **States**   | IL, IN, MI, MN, OH, WI |
-| **Counties** | '{r} num_obs'          |
-| **Year**     | 2024                   |
+| **Counties** | `{r} num_obs`          |
+| **Years**    | CHR: 2024              |
+|**Voter Data**| 2016 & 2020            |
+| **% Female** | 2022                   |
+| **% Rural**  | 2020                   |
 
 ------------------------------------------------------------------------
 
-The breakdown of '{r} num_obs' counties across these states is:
+The breakdown of `{r} num_obs` counties across these states is:
 
 |                    |              |
 |--------------------|--------------|
-| **Illinois (IL)**  | '{r} num_il' |
-| **Indiana (IN)**   | '{r} num_in' |
-| **Michigan (MI)**  | '{r} num_mi' |
-| **Minnesota (MN)** | '{r} num_mn' |
-| **Ohio (OH)**      | '{r} num_oh' |
-| **Wisconsin (WI)** | '{r} num_wi' |
+| **Illinois (IL)**  | `{r} num_il` |
+| **Indiana (IN)**   | `{r} num_in` |
+| **Michigan (MI)**  | `{r} num_mi` |
+| **Minnesota (MN)** | `{r} num_mn` |
+| **Ohio (OH)**      | `{r} num_oh` |
+| **Wisconsin (WI)** | `{r} num_wi` |
 
 ------------------------------------------------------------------------
 
@@ -146,9 +152,9 @@ For multiple comparisons, insignificant comparisons are not shown to reduce clut
 
 chr_2024<-chr_2024|>
   mutate(
-    votes=floor(voter_turnout*county_population),
-    rural_voters=floor(voter_turnout*county_population*rural_raw),
-    female_voters=floor(voter_turnout*county_population*female_raw),
+    votes=floor(voter_turnout/100*county_population),
+    rural_voters=floor(voter_turnout/100*county_population*rural_raw/100),
+    female_voters=floor(voter_turnout/100*county_population*female_raw/100),
     
 )
 overall_turnout<-sum(chr_2024$votes)/sum(chr_2024$county_population)
@@ -162,9 +168,9 @@ overall_turnout<-sum(chr_2024$votes)/sum(chr_2024$county_population)
 #| title: "Total Population"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "primary",
-  value = sum(chr_2024$county_population)
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(chr_2024$county_population)
 )
 ```
 
@@ -173,9 +179,9 @@ list(
 #| title: "Total Voter Turnout"
 
 list(
-  #icon = "file-medical",
-  color = "secondary",
-  value = label_percent(accuracy=0.1)(overall_turnout)
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(overall_turnout)
 )
 ```
 
@@ -184,9 +190,9 @@ list(
 #| title: "Estimated Rural Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "tertiary",
-  value = label_percent(accuracy = 0.1)(floor(sum(chr_2024$rural_voters)/sum(chr_2024$county_population)))
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)(sum(chr_2024$rural_voters)/sum(chr_2024$county_population))
 )
 ```
 
@@ -195,15 +201,15 @@ list(
 #| title: "Estimated Female Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "orange",
-  value = label_percent(accuracy = 0.1)(floor(sum(chr_2024$female_voters)/sum(chr_2024$county_population)))
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)(sum(chr_2024$female_voters)/sum(chr_2024$county_population))
 )
 ```
 
 ## Row {height="40%"}
 
-### Column {width="40%"}
+### Column {width="30%"}
 
 ```{r}
 #| title: State Turnouts
@@ -224,20 +230,22 @@ wi_turnout<-sum(wi_chr$votes)/sum(wi_chr$county_population)
 
 overview_vote_table<-data.frame(
   state=c("Illinois","Indiana","Michigan","Minnesota","Ohio","Wisconsin"),
-  state_turnout=c(il_turnout,in_turnout,mi_turnout,mn_turnout,oh_turnout,wi_turnout),
-  state_proportion=c(sum(il_chr$votes)/sum(chr_2024$county_population),
-                     sum(in_chr$votes)/sum(chr_2024$county_population),
-                     sum(mi_chr$votes)/sum(chr_2024$county_population),
-                     sum(mn_chr$votes)/sum(chr_2024$county_population),
-                     sum(oh_chr$votes)/sum(chr_2024$county_population),
-                     sum(wi_chr$votes)/sum(chr_2024$county_population)))
+  state_turnout=c(label_percent(accuracy=0.1)(il_turnout),label_percent(accuracy=0.1)(in_turnout),
+                  label_percent(accuracy=0.1)(mi_turnout),label_percent(accuracy=0.1)(mn_turnout),
+                  label_percent(accuracy=0.1)(oh_turnout),label_percent(accuracy=0.1)(wi_turnout)),
+  state_proportion=c(label_percent(accuracy=0.1)(sum(il_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(in_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(mi_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(mn_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(oh_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(wi_chr$votes)/sum(chr_2024$votes))))
 colnames(overview_vote_table)<-c("State","Voter Turnout","Proportion of Votes")
 print(overview_vote_table)
 
 
 ```
 
-### Column {width="60%"}
+### Column {width="35%"}
 
 ```{r}
 #| title: Proportion of Votes by County Ruralness
@@ -245,9 +253,11 @@ print(overview_vote_table)
 urban_voting<-chr_2024%>%group_by(urban)%>%summarise(votes=sum(county_population))
 
 ggplot(data=urban_voting,aes(x=urban,y=votes))+
-  geom_point(size=3,color="#8826b9")+
+  geom_bar(stat="identity",fill="#8826b9")+
   labs(x="County Ruralness",y="Number of Votes")
 ```
+
+### Column {width="35%"}
 
 ```{r}
 #| title: Voter Turnout by Ruralness
@@ -262,34 +272,38 @@ ggplot(data=chr_2024,aes(x=urban,y=voter_turnout,fill=urban))+
   scale_fill_manual(values=c("grey50","grey90","grey10"))
 ```
 
-## Row {height="40%"}
+## Row {.tabset height="40%"}
 
 ```{r}
 #| title: State Voting by Ruralness
 
 ggplot()+
-  geom_point(data=il_chr,aes(x=rural_raw,y=votes,color="Illinois"))+
-  geom_point(data=in_chr,aes(x=rural_raw,y=votes,color="Indiana"))+
-  geom_point(data=mi_chr,aes(x=rural_raw,y=votes,color="Michigan"))+
-  geom_point(data=mn_chr,aes(x=rural_raw,y=votes,color="Minnesota"))+
-  geom_point(data=oh_chr,aes(x=rural_raw,y=votes,color="Ohio"))+
-  geom_point(data=wi_chr,aes(x=rural_raw,y=votes,color="Wisconsin"))+
-  labs(x="Percent Rural Population",y="Number of Votes")+
-  xlim(0,100)+ylim(0,5000000)
+  geom_point(data=il_chr,aes(x=rural_raw,y=log10(votes),color="Illinois"))+
+  geom_point(data=in_chr,aes(x=rural_raw,y=log10(votes),color="Indiana"))+
+  geom_point(data=mi_chr,aes(x=rural_raw,y=log10(votes),color="Michigan"))+
+  geom_point(data=mn_chr,aes(x=rural_raw,y=log10(votes),color="Minnesota"))+
+  geom_point(data=oh_chr,aes(x=rural_raw,y=log10(votes),color="Ohio"))+
+  geom_point(data=wi_chr,aes(x=rural_raw,y=log10(votes),color="Wisconsin"))+
+  geom_smooth(data=chr_2024,aes(x=rural_raw,y=log10(votes)),method="lm",formula='y~x',color="black")+
+  stat_poly_eq(data=chr_2024,aes(x=rural_raw,y=log10(votes)))+
+  labs(x="Percent Rural Population",y="log10(Number of Votes)")+
+  xlim(0,100)+ylim(0,10)
 ```
 
 ```{r}
 #| title: State Voting by Gender
 
 ggplot()+
-  geom_point(data=il_chr,aes(x=female_raw,y=votes,color="Illinois"))+
-  geom_point(data=in_chr,aes(x=female_raw,y=votes,color="Indiana"))+
-  geom_point(data=mi_chr,aes(x=female_raw,y=votes,color="Michigan"))+
-  geom_point(data=mn_chr,aes(x=female_raw,y=votes,color="Minnesota"))+
-  geom_point(data=oh_chr,aes(x=female_raw,y=votes,color="Ohio"))+
-  geom_point(data=wi_chr,aes(x=female_raw,y=votes,color="Wisconsin"))+
-  labs(x="Percent Female Population",y="Number of Votes")+
-  xlim(35,65)+ylim(0,5000000)
+  geom_point(data=il_chr,aes(x=female_raw,y=log10(votes),color="Illinois"))+
+  geom_point(data=in_chr,aes(x=female_raw,y=log10(votes),color="Indiana"))+
+  geom_point(data=mi_chr,aes(x=female_raw,y=log10(votes),color="Michigan"))+
+  geom_point(data=mn_chr,aes(x=female_raw,y=log10(votes),color="Minnesota"))+
+  geom_point(data=oh_chr,aes(x=female_raw,y=log10(votes),color="Ohio"))+
+  geom_point(data=wi_chr,aes(x=female_raw,y=log10(votes),color="Wisconsin"))+
+  geom_smooth(data=chr_2024,aes(x=female_raw,y=log10(votes)),method="lm",formula='y~x',color="black")+
+  stat_poly_eq(data=chr_2024,aes(x=female_raw,y=log10(votes)))+
+  labs(x="Percent Female Population",y="log10(Number of Votes)")+
+  xlim(35,65)+ylim(0,10)
 ```
 
 ```{r}
@@ -322,9 +336,9 @@ ggplot(data=chr_2024,aes(x=state,y=voter_turnout,color=state))+
 #| title: "Population"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "primary",
-  value = sum(il_chr$county_population)
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(il_chr$county_population)
 )
 ```
 
@@ -333,9 +347,9 @@ list(
 #| title: "Voter Turnout"
 
 list(
-  #icon = "file-medical",
-  color = "secondary",
-  value = label_percent(accuracy=0.1)(il_turnout)
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(il_turnout)
 )
 ```
 
@@ -344,9 +358,9 @@ list(
 #| title: "Estimated Rural Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "tertiary",
-  value = label_percent(accuracy = 0.1)(floor(sum(il_chr$rural_voters)/sum(il_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(il_chr$rural_voters)/sum(il_chr$county_population)))
 )
 ```
 
@@ -355,9 +369,9 @@ list(
 #| title: "Estimated Female Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "orange",
-  value = label_percent(accuracy = 0.1)(floor(sum(il_chr$female_voters)/sum(il_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(il_chr$female_voters)/sum(il_chr$county_population)))
 )
 ```
 
@@ -379,9 +393,9 @@ ggplot(data=il_chr,aes(x=urban,y=voter_turnout,fill=urban))+
 ```{r}
 #| title: Voter Turnout by Gender
 
-male_chr<-il_chr|>filter(gender=="Male")
-female_chr<-il_chr|>filter(gender=="Female")
-t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+#male_chr<-il_chr|>filter(gender=="Male")
+#female_chr<-il_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
 
 
 il_chr$gender<-factor(il_chr$gender)
@@ -400,6 +414,8 @@ ggplot(data=il_chr,aes(x=gender,y=voter_turnout,fill=gender))+
 
 ggplot(data=il_chr,aes(x=female_raw,y=log10(county_population)))+
   geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="log10(County Population)")+
   xlim(35,65)+ylim(0,10)
 ```
@@ -409,6 +425,8 @@ ggplot(data=il_chr,aes(x=female_raw,y=log10(county_population)))+
 
 ggplot(data=il_chr,aes(x=female_raw,y=rural_raw))+
   geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="Percent Rural Population")+
   xlim(35,65)+ylim(0,100)
 ```
@@ -418,6 +436,8 @@ ggplot(data=il_chr,aes(x=female_raw,y=rural_raw))+
 
 ggplot(data=il_chr,aes(y=log10(county_population),x=rural_raw))+
   geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Rural Population",y="log10(County Population)")+
   ylim(0,10)+xlim(0,100)
 ```
@@ -431,9 +451,11 @@ il_chr|>
   select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
   arrange(county)|>
   datatable(
-    colnames=c("County Name","Percent Female Population","Percent Voter Turnout","Population",
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
                "Percent Rural Population","Majority Gender","Ruralness"),
-    options = list(
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(
       dom="lrtip", 
       paging=TRUE,
       lengthMenu=c(5,10,50),
@@ -454,9 +476,9 @@ il_chr|>
 #| title: "Population"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "primary",
-  value = sum(in_chr$county_population)
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(in_chr$county_population)
 )
 ```
 
@@ -465,9 +487,9 @@ list(
 #| title: "Voter Turnout"
 
 list(
-  #icon = "file-medical",
-  color = "secondary",
-  value = label_percent(accuracy=0.1)(in_turnout)
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(in_turnout)
 )
 ```
 
@@ -476,9 +498,9 @@ list(
 #| title: "Estimated Rural Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "tertiary",
-  value = label_percent(accuracy = 0.1)(floor(sum(in_chr$rural_voters)/sum(in_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(in_chr$rural_voters)/sum(in_chr$county_population)))
 )
 ```
 
@@ -487,9 +509,9 @@ list(
 #| title: "Estimated Female Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "orange",
-  value = label_percent(accuracy = 0.1)(floor(sum(in_chr$female_voters)/sum(in_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(in_chr$female_voters)/sum(in_chr$county_population)))
 )
 ```
 
@@ -511,9 +533,9 @@ ggplot(data=in_chr,aes(x=urban,y=voter_turnout,fill=urban))+
 ```{r}
 #| title: Voter Turnout by Gender
 
-male_chr<-in_chr|>filter(gender=="Male")
-female_chr<-in_chr|>filter(gender=="Female")
-t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+#male_chr<-in_chr|>filter(gender=="Male")
+#female_chr<-in_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
 
 
 in_chr$gender<-factor(in_chr$gender)
@@ -532,6 +554,8 @@ ggplot(data=in_chr,aes(x=gender,y=voter_turnout,fill=gender))+
 
 ggplot(data=in_chr,aes(x=female_raw,y=log10(county_population)))+
   geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="log10(County Population)")+
   xlim(35,65)+ylim(0,10)
 ```
@@ -541,6 +565,8 @@ ggplot(data=in_chr,aes(x=female_raw,y=log10(county_population)))+
 
 ggplot(data=in_chr,aes(x=female_raw,y=rural_raw))+
   geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="Percent Rural Population")+
   xlim(35,65)+ylim(0,100)
 ```
@@ -550,6 +576,8 @@ ggplot(data=in_chr,aes(x=female_raw,y=rural_raw))+
 
 ggplot(data=in_chr,aes(y=log10(county_population),x=rural_raw))+
   geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Rural Population",y="log10(County Population)")+
   ylim(0,10)+xlim(0,100)
 ```
@@ -563,8 +591,10 @@ in_chr|>
   select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
   arrange(county)|>
   datatable(
-    colnames=c("County Name","Percent Female Population","Percent Voter Turnout","Population",
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
                "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
     options=list(
       dom="lrtip", 
       paging=TRUE,
@@ -586,9 +616,9 @@ in_chr|>
 #| title: "Population"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "primary",
-  value = sum(mi_chr$county_population)
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(mi_chr$county_population)
 )
 ```
 
@@ -597,9 +627,9 @@ list(
 #| title: "Voter Turnout"
 
 list(
-  #icon = "file-medical",
-  color = "secondary",
-  value = label_percent(accuracy=0.1)(mi_turnout)
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(mi_turnout)
 )
 ```
 
@@ -608,9 +638,9 @@ list(
 #| title: "Estimated Rural Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "tertiary",
-  value = label_percent(accuracy = 0.1)(floor(sum(mi_chr$rural_voters)/sum(mi_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(mi_chr$rural_voters)/sum(mi_chr$county_population)))
 )
 ```
 
@@ -619,9 +649,9 @@ list(
 #| title: "Estimated Female Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "orange",
-  value = label_percent(accuracy = 0.1)(floor(sum(mi_chr$female_voters)/sum(mi_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(mi_chr$female_voters)/sum(mi_chr$county_population)))
 )
 ```
 
@@ -630,7 +660,7 @@ list(
 ```{r}
 #| title: Voter Turnout by Ruralness
 
-in_chr$urban<-factor(mi_chr$urban)
+mi_chr$urban<-factor(mi_chr$urban)
 ggplot(data=mi_chr,aes(x=urban,y=voter_turnout,fill=urban))+
   geom_boxplot()+
   labs(x="County Ruralness",y="Percent Voter Turnout")+
@@ -643,9 +673,9 @@ ggplot(data=mi_chr,aes(x=urban,y=voter_turnout,fill=urban))+
 ```{r}
 #| title: Voter Turnout by Gender
 
-male_chr<-mi_chr|>filter(gender=="Male")
-female_chr<-mi_chr|>filter(gender=="Female")
-t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+#male_chr<-mi_chr|>filter(gender=="Male")
+#female_chr<-mi_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
 
 
 mi_chr$gender<-factor(mi_chr$gender)
@@ -664,6 +694,8 @@ ggplot(data=mi_chr,aes(x=gender,y=voter_turnout,fill=gender))+
 
 ggplot(data=mi_chr,aes(x=female_raw,y=log10(county_population)))+
   geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="log10(County Population)")+
   xlim(35,65)+ylim(0,10)
 ```
@@ -673,6 +705,8 @@ ggplot(data=mi_chr,aes(x=female_raw,y=log10(county_population)))+
 
 ggplot(data=mi_chr,aes(x=female_raw,y=rural_raw))+
   geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="Percent Rural Population")+
   xlim(35,65)+ylim(0,100)
 ```
@@ -682,6 +716,8 @@ ggplot(data=mi_chr,aes(x=female_raw,y=rural_raw))+
 
 ggplot(data=mi_chr,aes(y=log10(county_population),x=rural_raw))+
   geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Rural Population",y="log10(County Population)")+
   ylim(0,10)+xlim(0,100)
 ```
@@ -695,8 +731,10 @@ mi_chr|>
   select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
   arrange(county)|>
   datatable(
-    colnames=c("County Name","Percent Female Population","Percent Voter Turnout","Population",
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
                "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
     options=list(
       dom="lrtip", 
       paging=TRUE,
@@ -718,9 +756,9 @@ mi_chr|>
 #| title: "Population"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "primary",
-  value = sum(mn_chr$county_population)
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(mn_chr$county_population)
 )
 ```
 
@@ -729,9 +767,9 @@ list(
 #| title: "Voter Turnout"
 
 list(
-  #icon = "file-medical",
-  color = "secondary",
-  value = label_percent(accuracy=0.1)(mn_turnout)
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(mn_turnout)
 )
 ```
 
@@ -740,9 +778,9 @@ list(
 #| title: "Estimated Rural Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "tertiary",
-  value = label_percent(accuracy = 0.1)(floor(sum(mn_chr$rural_voters)/sum(mn_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(mn_chr$rural_voters)/sum(mn_chr$county_population)))
 )
 ```
 
@@ -751,9 +789,9 @@ list(
 #| title: "Estimated Female Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "orange",
-  value = label_percent(accuracy = 0.1)(floor(sum(mn_chr$female_voters)/sum(mn_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(mn_chr$female_voters)/sum(mn_chr$county_population)))
 )
 ```
 
@@ -775,9 +813,9 @@ ggplot(data=mn_chr,aes(x=urban,y=voter_turnout,fill=urban))+
 ```{r}
 #| title: Voter Turnout by Gender
 
-male_chr<-mn_chr|>filter(gender=="Male")
-female_chr<-mn_chr|>filter(gender=="Female")
-t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+#male_chr<-mn_chr|>filter(gender=="Male")
+#female_chr<-mn_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
 
 
 mn_chr$gender<-factor(mn_chr$gender)
@@ -796,6 +834,8 @@ ggplot(data=mn_chr,aes(x=gender,y=voter_turnout,fill=gender))+
 
 ggplot(data=mn_chr,aes(x=female_raw,y=log10(county_population)))+
   geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="log10(County Population)")+
   xlim(35,65)+ylim(0,10)
 ```
@@ -805,6 +845,8 @@ ggplot(data=mn_chr,aes(x=female_raw,y=log10(county_population)))+
 
 ggplot(data=mn_chr,aes(x=female_raw,y=rural_raw))+
   geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="Percent Rural Population")+
   xlim(35,65)+ylim(0,100)
 ```
@@ -814,6 +856,8 @@ ggplot(data=mn_chr,aes(x=female_raw,y=rural_raw))+
 
 ggplot(data=mn_chr,aes(y=log10(county_population),x=rural_raw))+
   geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Rural Population",y="log10(County Population)")+
   ylim(0,10)+xlim(0,100)
 ```
@@ -827,8 +871,10 @@ mn_chr|>
   select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
   arrange(county)|>
   datatable(
-    colnames=c("County Name","Percent Female Population","Percent Voter Turnout","Population",
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
                "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
     options=list(
       dom="lrtip", 
       paging=TRUE,
@@ -850,9 +896,9 @@ mn_chr|>
 #| title: "Population"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "primary",
-  value = sum(oh_chr$county_population)
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(oh_chr$county_population)
 )
 ```
 
@@ -861,9 +907,9 @@ list(
 #| title: "Voter Turnout"
 
 list(
-  #icon = "file-medical",
-  color = "secondary",
-  value = label_percent(accuracy=0.1)(oh_turnout)
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(oh_turnout)
 )
 ```
 
@@ -872,9 +918,9 @@ list(
 #| title: "Estimated Rural Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "tertiary",
-  value = label_percent(accuracy = 0.1)(floor(sum(oh_chr$rural_voters)/sum(oh_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(oh_chr$rural_voters)/sum(oh_chr$county_population)))
 )
 ```
 
@@ -883,9 +929,9 @@ list(
 #| title: "Estimated Female Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "orange",
-  value = label_percent(accuracy = 0.1)(floor(sum(oh_chr$female_voters)/sum(oh_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(oh_chr$female_voters)/sum(oh_chr$county_population)))
 )
 ```
 
@@ -907,9 +953,9 @@ ggplot(data=oh_chr,aes(x=urban,y=voter_turnout,fill=urban))+
 ```{r}
 #| title: Voter Turnout by Gender
 
-male_chr<-oh_chr|>filter(gender=="Male")
-female_chr<-oh_chr|>filter(gender=="Female")
-t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+#male_chr<-oh_chr|>filter(gender=="Male")
+#female_chr<-oh_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
 
 
 oh_chr$gender<-factor(oh_chr$gender)
@@ -928,6 +974,8 @@ ggplot(data=oh_chr,aes(x=gender,y=voter_turnout,fill=gender))+
 
 ggplot(data=oh_chr,aes(x=female_raw,y=log10(county_population)))+
   geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="log10(County Population)")+
   xlim(35,65)+ylim(0,10)
 ```
@@ -937,6 +985,8 @@ ggplot(data=oh_chr,aes(x=female_raw,y=log10(county_population)))+
 
 ggplot(data=oh_chr,aes(x=female_raw,y=rural_raw))+
   geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="Percent Rural Population")+
   xlim(35,65)+ylim(0,100)
 ```
@@ -946,6 +996,8 @@ ggplot(data=oh_chr,aes(x=female_raw,y=rural_raw))+
 
 ggplot(data=oh_chr,aes(y=log10(county_population),x=rural_raw))+
   geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Rural Population",y="log10(County Population)")+
   ylim(0,10)+xlim(0,100)
 ```
@@ -959,8 +1011,10 @@ oh_chr|>
   select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
   arrange(county)|>
   datatable(
-    colnames=c("County Name","Percent Female Population","Percent Voter Turnout","Population",
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
                "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
     options=list(
       dom="lrtip", 
       paging=TRUE,
@@ -982,9 +1036,9 @@ oh_chr|>
 #| title: "Population"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "primary",
-  value = sum(wi_chr$county_population)
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(wi_chr$county_population)
 )
 ```
 
@@ -993,9 +1047,9 @@ list(
 #| title: "Voter Turnout"
 
 list(
-  #icon = "file-medical",
-  color = "secondary",
-  value = label_percent(accuracy=0.1)(wi_turnout)
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(wi_turnout)
 )
 ```
 
@@ -1004,9 +1058,9 @@ list(
 #| title: "Estimated Rural Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "tertiary",
-  value = label_percent(accuracy = 0.1)(floor(sum(wi_chr$rural_voters)/sum(wi_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(wi_chr$rural_voters)/sum(wi_chr$county_population)))
 )
 ```
 
@@ -1015,9 +1069,9 @@ list(
 #| title: "Estimated Female Voter Turnout"
 
 list(
-  #icon = "clipboard2-pulse",
-  color = "orange",
-  value = label_percent(accuracy = 0.1)(floor(sum(wi_chr$female_voters)/sum(wi_chr$county_population)))
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(wi_chr$female_voters)/sum(wi_chr$county_population)))
 )
 ```
 
@@ -1039,9 +1093,9 @@ ggplot(data=wi_chr,aes(x=urban,y=voter_turnout,fill=urban))+
 ```{r}
 #| title: Voter Turnout by Gender
 
-male_chr<-wi_chr|>filter(gender=="Male")
-female_chr<-wi_chr|>filter(gender=="Female")
-t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+#male_chr<-wi_chr|>filter(gender=="Male")
+#female_chr<-wi_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
 
 
 in_chr$gender<-factor(in_chr$gender)
@@ -1060,6 +1114,8 @@ ggplot(data=wi_chr,aes(x=gender,y=voter_turnout,fill=gender))+
 
 ggplot(data=wi_chr,aes(x=female_raw,y=log10(county_population)))+
   geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="County Population")+
   xlim(35,65)+ylim(0,10)
 ```
@@ -1069,6 +1125,8 @@ ggplot(data=wi_chr,aes(x=female_raw,y=log10(county_population)))+
 
 ggplot(data=wi_chr,aes(x=female_raw,y=rural_raw))+
   geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Female Population",y="Percent Rural Population")+
   xlim(35,65)+ylim(0,100)
 ```
@@ -1078,6 +1136,8 @@ ggplot(data=wi_chr,aes(x=female_raw,y=rural_raw))+
 
 ggplot(data=wi_chr,aes(y=log10(county_population),x=rural_raw))+
   geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
   labs(x="Percent Rural Population",y="log10(County Population)")+
   ylim(0,10)+xlim(0,100)
 ```
@@ -1091,8 +1151,10 @@ wi_chr|>
   select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
   arrange(county)|>
   datatable(
-    colnames=c("County Name","Percent Female Population","Percent Voter Turnout","Population",
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
                "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
     options=list(
       dom="lrtip", 
       paging=TRUE,
@@ -1110,8 +1172,10 @@ chr_2024|>
   select(-county_size,-rural_voters,-female_voters)|>
   arrange(fipscode)|>
   datatable(
-    colnames=c("fipscode","County Name","State","Percent Female Population","Percent Voter Turnout","Population",
+    colnames=c("County Name","State","Percent Female Population","Percent Voter Turnout","Population",
                "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
     options=list(dom='ftp',
       paging=TRUE,
       lengthMenu=c(25,50,100),
