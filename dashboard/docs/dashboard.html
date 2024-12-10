@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-12-10">
+
+<title>County Health Rankings Analysis - County Health Rankings Dashboard</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-dashboard/quarto-dashboard.js"></script>
+<script src="site_libs/quarto-dashboard/stickythead.js"></script>
+<script src="site_libs/quarto-dashboard/datatables.min.js" kdttablesentinel="true"></script>
+<script src="site_libs/quarto-dashboard/pdfmake.min.js" kdttablesentinel="true"></script>
+<script src="site_libs/quarto-dashboard/vfs_fonts.js" kdttablesentinel="true"></script>
+<script src="site_libs/quarto-dashboard/web-components.js" type="module"></script>
+<script src="site_libs/quarto-dashboard/components.js"></script>
+<link href="site_libs/quarto-dashboard/datatables.min.css" rel="stylesheet" kdttablesentinel="true">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+
+
+</head>
+
+<body class="quarto-dashboard dashboard-fill dashboard-sidebar fullcontent">
+
+<header id="quarto-dashboard-header">
+<nav class="navbar navbar-expand-md slim" data-bs-theme="dark">
+  <div class="navbar-container container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-controls="dashboard-collapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>    
+
+
+    <div class="navbar-brand-container">       
+
+      <div class="navbar-title">
+        <div class="navbar-title-text"><a href="#">County Health Rankings Dashboard</a></div>
+        
+        
+      </div>
+    </div>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-overview" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#overview" data-scrolling="false" href="#overview" aria-controls="overview" aria-selected="true"><span class="nav-link-text">Overview</span></a></li><li class="nav-item" role="presentation"><a id="tab-illinois" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#illinois" data-scrolling="false" href="#illinois" aria-controls="illinois" aria-selected="false"><span class="nav-link-text">Illinois</span></a></li><li class="nav-item" role="presentation"><a id="tab-indiana" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#indiana" data-scrolling="false" href="#indiana" aria-controls="indiana" aria-selected="false"><span class="nav-link-text">Indiana</span></a></li><li class="nav-item" role="presentation"><a id="tab-michigan" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#michigan" data-scrolling="false" href="#michigan" aria-controls="michigan" aria-selected="false"><span class="nav-link-text">Michigan</span></a></li><li class="nav-item" role="presentation"><a id="tab-minnesota" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#minnesota" data-scrolling="false" href="#minnesota" aria-controls="minnesota" aria-selected="false"><span class="nav-link-text">Minnesota</span></a></li><li class="nav-item" role="presentation"><a id="tab-ohio" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#ohio" data-scrolling="false" href="#ohio" aria-controls="ohio" aria-selected="false"><span class="nav-link-text">Ohio</span></a></li><li class="nav-item" role="presentation"><a id="tab-wisconsin" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#wisconsin" data-scrolling="false" href="#wisconsin" aria-controls="wisconsin" aria-selected="false"><span class="nav-link-text">Wisconsin</span></a></li><li class="nav-item" role="presentation"><a id="tab-data" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#data" data-scrolling="false" href="#data" aria-controls="data" aria-selected="false"><span class="nav-link-text">Data</span></a></li></ul></div></div>
+</nav>
+</header>
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-layout-custom quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages dashboard-sidebar-container">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+<!-- main -->
+
+<div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" data-bslib-sidebar-border="false" data-bslib-sidebar-border-radius="false"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
+<div class="tab-content bslib-grid html-fill-item html-fill-container" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div id="overview" class="dashboard-page tab-pane show active html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-overview">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 20fr) minmax(3em, 40fr) minmax(3em, 40fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-primary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Total Population
+</p>
+<p class="value-box-value">
+52814963
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-secondary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Total Voter Turnout
+</p>
+<p class="value-box-value">
+69.8%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-green4" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Rural Voter Turnout
+</p>
+<p class="value-box-value">
+16.6%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-orange" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Female Voter Turnout
+</p>
+<p class="value-box-value">
+35.1%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 30fr) minmax(3em, 35fr) minmax(3em, 35fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="State Turnouts" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">State Turnouts</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output cell-output-stdout html-fill-item html-fill-container">
+<pre><code>      State Voter Turnout Proportion of Votes
+1  Illinois         66.7%               22.8%
+2   Indiana         61.7%               11.4%
+3  Michigan         73.7%               20.0%
+4 Minnesota         79.8%               12.4%
+5      Ohio         67.1%               21.4%
+6 Wisconsin         75.1%               12.0%</code></pre>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Proportion of Votes by County Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Proportion of Votes by County Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-8"><li class="nav-item" role="presentation"><a href="#card-tabset-8-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="State Voting by Ruralness" aria-selected="true" class="nav-link active">State Voting by Ruralness</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-8-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="State Voting by Gender" aria-selected="false" class="nav-link">State Voting by Gender</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-8-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Voter Turnout by State" aria-selected="false" class="nav-link">Voter Turnout by State</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-8"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-8-1"><div class="card-body html-fill-item html-fill-container" data-title="State Voting by Ruralness">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-8-2"><div class="card-body html-fill-item html-fill-container" data-title="State Voting by Gender">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-8-3"><div class="card-body html-fill-item html-fill-container" data-title="Voter Turnout by State">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div><div id="illinois" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-illinois">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 60fr) minmax(3em, 40fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 20fr) minmax(3em, 40fr) minmax(3em, 40fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-primary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Population
+</p>
+<p class="value-box-value">
+12582032
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-secondary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Voter Turnout
+</p>
+<p class="value-box-value">
+66.7%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-green4" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Rural Voter Turnout
+</p>
+<p class="value-box-value">
+8.6%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-orange" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Female Voter Turnout
+</p>
+<p class="value-box-value">
+33.7%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Gender" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Gender</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-15"><li class="nav-item" role="presentation"><a href="#card-tabset-15-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Population" aria-selected="true" class="nav-link active">Gender and County Population</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-15-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Ruralness" aria-selected="false" class="nav-link">Gender and County Ruralness</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-15-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="County Ruralness and Population" aria-selected="false" class="nav-link">County Ruralness and Population</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-15"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-15-1"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-15-2"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Ruralness">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-15-3"><div class="card-body html-fill-item html-fill-container" data-title="County Ruralness and Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Data" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Data</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-a12be748cec3333daf1d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-a12be748cec3333daf1d">{"x":{"filter":"none","vertical":false,"data":[["Adams County","Alexander County","Bond County","Boone County","Brown County","Bureau County","Calhoun County","Carroll County","Cass County","Champaign County","Christian County","Clark County","Clay County","Clinton County","Coles County","Cook County","Crawford County","Cumberland County","De Witt County","DeKalb County","Douglas County","DuPage County","Edgar County","Edwards County","Effingham County","Fayette County","Ford County","Franklin County","Fulton County","Gallatin County","Greene County","Grundy County","Hamilton County","Hancock County","Hardin County","Henderson County","Henry County","Iroquois County","Jackson County","Jasper County","Jefferson County","Jersey County","Jo Daviess County","Johnson County","Kane County","Kankakee County","Kendall County","Knox County","La Salle County","Lake County","Lawrence County","Lee County","Livingston County","Logan County","Macon County","Macoupin County","Madison County","Marion County","Marshall County","Mason County","Massac County","McDonough County","McHenry County","McLean County","Menard County","Mercer County","Monroe County","Montgomery County","Morgan County","Moultrie County","Ogle County","Peoria County","Perry County","Piatt County","Pike County","Pope County","Pulaski County","Putnam County","Randolph County","Richland County","Rock Island County","Saline County","Sangamon County","Schuyler County","Scott County","Shelby County","St. Clair County","Stark County","Stephenson County","Tazewell County","Union County","Vermilion County","Wabash County","Warren County","Washington County","Wayne County","White County","Whiteside County","Will County","Williamson County","Winnebago County","Woodford County"],[50.34221707,51.56442981,47.05420741,49.50144862,36.25592417,50.20104789,49.58715596,46.13948097,48.94524769,50.17381453,46.53068549,49.64869657,49.96550931,47.78780243,50.73811888,51.13326856,47.49676306,49.63192561,49.96734161,50.30728709,50.13920526,50.43680048,50.78804844,51.2765607,49.62855062,44.78760854,50.08679900000001,50.05101767,47.74840253,51.0607621,49.87554716,49.64461454,50.2254509,49.80282997,48.51264943,49.9593562,49.88331027,50.37963208,50.05606553000001,49.46808511,48.59615385,50.58363927000001,49.57257101,40.4753008,49.78956867,50.46759809,49.90382794,48.95764803,49.22000777,49.6131989,43.7240177,46.72949657,49.26100053,48.86375992,51.79783806,50.16612047,50.98384016000001,50.46052988,49.76879603,50.09413241,51.32412205,50.31458248000001,49.78845025,50.95622907000001,50.85388993999999,49.35500516,49.79019781,47.11634547,49.3247229,50.42937932,49.81402504,51.20218855,44.89994171,50.08072714,49.84120409000001,48.77984085,49.90983771,49.03086863,46.73739524,50.21056041000001,50.51968882,50.47862433,51.66089218,45.90868663,50.35490605,49.99277491,51.37550411,49.37324602,51.25266463,50.33368999,49.69284905,49.73388446,50.34725354,50.08560597,49.32932639,50.18271169,50.4701043,50.05305719,49.96533942,49.6454007,50.96283329,49.70362988],[66.28509292,56.30107527,61.49490374,66.90504888,46.98974837,69.05921965,73.13984169,69.14261094,63.67664670999999,61.71840031,62.45519368,69.48856549,67.57605495999999,65.47131148000001,54.65006648000001,65.37601644999999,62.47928406,70.26506024,65.74354772999999,61.18467345000001,60.68055556,74.71587102000001,59.32681868,68,74.04859085999999,59.66182142,68.84158416,62.13844871000001,60.34008683,68.04071247,60.78086872,71.75,67.95275590999999,66.78291815,64.92492492000001,66.49042844,67.88930085,66.81753216,50.48606466,76.38356164,59.64359150000001,69.22006379,72.94804436999999,64.33783108,66.21434079000001,60.82271924,74.74034698,59.31821094000001,64.0466089,70.69686264000001,50.54000788,60.65100795,62,57.67462039,61.44563324,67.72483789,67.06227536,60.77632724000001,69.52799121999999,63.35205993,62.82157676,49.98982706,73.39618416,67.45125401999999,73.11873351,73.67854183999999,79.22082786999999,60.39155301,56.30378816,62.35783633999999,68.50586701,62.92233337,59.4852071,77.7672209,66.02159467999999,61.35401975,61.95985832,74.17943107000001,58.39607843,67.50104646,63.44008363,59.65498651999999,69.96059574,69.25531915000001,70.45045045000001,71.57988166,65.26431101,68.88888889,63.44748201,68.11541307,67.88388083,54.54451256,63.88349515,61.7167382,72.06566346999999,67.61752988000001,69.03255814000001,64.57891012,71.19236719999999,65.01738794000001,62.25000609,73.8907085],[64725,4858,16566,53154,6330,32828,4360,15529,12657,206542,33436,15229,13047,36909,46334,5109292,18536,10324,15310,100232,19755,920901,16433,6071,34325,21305,13249,37242,33021,4855,11651,53041,7984,17244,3597,6151,48419,26473,52617,9212,36400,21246,21758,13381,514182,106074,137254,48640,108078,709150,14914,33848,35521,27591,101483,44245,263864,36914,11678,12748,13896,26861,311747,171141,12121,15504,35033,28020,32209,14323,51351,178383,20588,16723,14484,3770,4991,5572,30068,15435,141527,23087,194534,6746,4790,20761,252671,5345,43627,129911,16767,72337,11087,16354,13643,15872,13614,54658,696757,66695,282188,38128],[33.93826916,96.94656488999999,59.55156951,29.39679689,100,54.98435807999999,100,100,51.98589173,15.95074442,50.68758815,100,63.92986153,80.21626602000001,26.32567271,0.05478110999999999,67.16098292,100,52.80355762,21.75662219,74.96453901,0.18780611,50.69370331,100,59.64578285,62.25800447,66.54352002,59.1947942,60.79323991,100,100,25.02807759,100,84.02951192,100,99.4676687,49.8011525,82.74919674,40.94838978,100,58.80688707,59.41335069,88.39119582000001,100,4.02248113,28.40412271,11.37037515,32.26129245,31.59915373,1.41528848,69.68586386999999,53.17908918000001,64.59583973000001,50.01250580999999,17.03013519,65.51915849,16.43916512,47.79347452,100,100,52.88305456,42.52147735,14.08959188,21.55784597,100,100,41.49934214,53.23105204,36.19018684,69.61310752999999,67.8728663,16.94274872,71.67343041000001,64.10364062000001,100,100,100,100,78.98750124,45.34876368,11.54404446,65.15062269000001,18.88429941,100,100,76.5412101,14.15578866,100,45.92202554,21.82225166,64.81094874,39.53739149,38.71138104,45.41728542,99.31691010999999,70.54206069999999,63.48634431,43.55102261,4.87481242,41.03465221,9.69405993,70.16143708],["Female","Female","Male","Male","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Female","Female","Male","Male","Male","Female","Female","Female","Female","Female","Male","Male","Female","Female","Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Female","Male","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Female","Female","Female","Female","Male","Female","Female","Female","Male","Female","Female","Male","Male","Male","Male","Female","Male","Female","Male","Female","Male","Male","Male","Male","Male","Female","Female","Female","Female","Male","Female","Male","Female","Male","Female","Female","Male","Male","Female","Female","Male","Female","Female","Female","Male","Male","Female","Male"],["Mixed","Rural","Mixed","Mixed","Rural","Mixed","Rural","Rural","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Rural","Mixed","Rural","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Urban","Mixed","Urban","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Urban","Mixed","Rural","Rural","Mixed","Mixed","Urban","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Rural","Rural","Rural","Rural","Mixed","Mixed","Urban","Mixed","Urban","Rural","Rural","Mixed","Urban","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Urban","Mixed","Urban","Mixed"],[42903,2735,10187,35562,2974,22670,3188,10737,8059,127474,20882,10582,8816,24164,25321,3340251,11581,7254,10065,61326,11987,688059,9749,4128,25417,12710,9120,23141,19924,3303,7081,38056,5425,11516,2335,4089,32871,17688,26564,7036,21710,14706,15872,8609,340462,64517,102584,28852,69220,501346,7537,20529,22023,15913,62356,29964,176953,22434,8119,8076,8729,13427,228810,115436,8862,11423,27753,16921,18134,8931,35178,112242,12246,13005,9562,2313,3092,4133,17558,10418,89784,13772,136097,4671,3374,14860,164903,3682,27680,88489,11382,39455,7082,10093,9831,10732,9398,35297,496037,43363,175662,28173]],"container":"<table class=\"cell-border stripe\">\n  <thead>\n    <tr>\n      <th>Percent Female Population<\/th>\n      <th>Percent Voter Turnout<\/th>\n      <th>Population<\/th>\n      <th>Percent Rural Population<\/th>\n      <th>Majority Gender<\/th>\n      <th>Ruralness<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"lrtip","language":{"info":"Showing _TOTAL_ entries"},"paging":true,"lengthMenu":[5,10,50],"pageLength":10,"scrollY":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,7]},{"name":"county","targets":0},{"name":"female_raw","targets":1},{"name":"voter_turnout","targets":2},{"name":"county_population","targets":3},{"name":"rural_raw","targets":4},{"name":"gender","targets":5},{"name":"urban","targets":6},{"name":"votes","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="indiana" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-indiana">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 60fr) minmax(3em, 40fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 20fr) minmax(3em, 40fr) minmax(3em, 40fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-primary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Population
+</p>
+<p class="value-box-value">
+6833037
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-secondary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Voter Turnout
+</p>
+<p class="value-box-value">
+61.7%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-green4" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Rural Voter Turnout
+</p>
+<p class="value-box-value">
+17.5%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-orange" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Female Voter Turnout
+</p>
+<p class="value-box-value">
+31.1%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Gender" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Gender</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-23"><li class="nav-item" role="presentation"><a href="#card-tabset-23-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Population" aria-selected="true" class="nav-link active">Gender and County Population</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-23-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Ruralness" aria-selected="false" class="nav-link">Gender and County Ruralness</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-23-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="County Ruralness and Population" aria-selected="false" class="nav-link">County Ruralness and Population</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-23"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-23-1"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-23-2"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Ruralness">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-23-3"><div class="card-body html-fill-item html-fill-container" data-title="County Ruralness and Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Data" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Data</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-9508565771451a1c595f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-9508565771451a1c595f">{"x":{"filter":"none","vertical":false,"data":[["Adams County","Allen County","Bartholomew County","Benton County","Blackford County","Boone County","Brown County","Carroll County","Cass County","Clark County","Clay County","Clinton County","Crawford County","Daviess County","De Kalb County","Dearborn County","Decatur County","Delaware County","Dubois County","Elkhart County","Fayette County","Floyd County","Fountain County","Franklin County","Fulton County","Gibson County","Grant County","Greene County","Hamilton County","Hancock County","Harrison County","Hendricks County","Henry County","Howard County","Huntington County","Jackson County","Jasper County","Jay County","Jefferson County","Jennings County","Johnson County","Knox County","Kosciusko County","La Porte County","Lagrange County","Lake County","Lawrence County","Madison County","Marion County","Marshall County","Martin County","Miami County","Monroe County","Montgomery County","Morgan County","Newton County","Noble County","Ohio County","Orange County","Owen County","Parke County","Perry County","Pike County","Porter County","Posey County","Pulaski County","Putnam County","Randolph County","Ripley County","Rush County","Scott County","Shelby County","Spencer County","St. Joseph County","Starke County","Steuben County","Sullivan County","Switzerland County","Tippecanoe County","Tipton County","Union County","Vanderburgh County","Vermillion County","Vigo County","Wabash County","Warren County","Warrick County","Washington County","Wayne County","Wells County","White County","Whitley County"],[49.83919264,50.65794011,49.46133589,49.28317468,50.78446178,49.82336444,49.71740527,48.82023838,49.53915823000001,50.9002954,50.02843171,50.01370155,48.69020501,49.63791968,49.98056299,49.72623098,49.70472441,51.61250011000001,49.53703704,50.25810817000001,50.36618271,51.11257031,49.89742971,49.70904985,49.38259458,49.08616979,51.70094817,49.35496356,50.6345209,50.39725533,49.53953477,49.72333921,47.2615762,51.2886783,50.05429766,49.34341253,49.86929479,49.663333,51.38408303999999,49.25188844,50.23343909,48.75240996,49.7636899,47.98567271,48.69573729,51.23446784,49.82088364000001,49.46563031,51.52372543,49.54459121,48.55656432,45.69994954,50.0855129,49.07375957,49.99584695,48.70143963,49.40781557,49.75466143,49.54390256,49.38087701,51.9335329,45.27967471,49.22748192,50.42364881,49.65885967,49.53944734,47.20784966,49.93247944,49.87107643,50.43483476,50.76866764,49.72327799,49.15610758,51.05607676,49.46685012,48.64506839,45.07014998,47.54147511,48.62466020999999,49.33923573,50.50345224,51.01143849,49.75729726,49.46984132999999,51.0509926,49.56860891,50.49474572,49.74489796,51.21693601,50.10411152,49.65037808,49.55670431],[58.77559462000001,63.31473507,63.52559607,64.0311284,57.91125541,80.64482362,72.66181229999999,61.49611399,56.01916697,65.39978527,61.18204489,58.91264786,60.1459854,52.20087336,60.27329955,66.37813808,61.75923599000001,52.30193184,70.19184266000001,53.54664555000001,56.70489509999999,70.17290583,62.90665616,69.46454414,61.40986908,63.80181603,52.4406256,59.05332533999999,84.45387663,73.97172901,65.43573161,72.4975426,55.21134156000001,64.43581001000001,63.15621678999999,60.32612104,61.19019375,54.99512512,57.97633136,58.22718631,67.85679941000001,55.9238561,61.90986939,58.38642946,40.53755242,61.35367708,59.55247132,51.79817982,58.44737967,60.19332427000001,65.07273877,52.14555936000001,54.37489237,59.33413835,67.09156694000001,61.82926828999999,56.05374617,64.87341772000001,58.76247505,60.40866118,53.59572029,58.12729089999999,64.55630514000001,66.72502892,66.91607685,60.35343035,56.2514828,59.30886685999999,66.39218423,61.65565488,55.28548124,59.34689031,68.11511701000001,58.27606261,58.93470790000001,59.40819702,54.1970473,51.47459727,51.96974105,68.5472973,62.92682927,55.71961544000001,62.39366138,52.27725147,59.40900754,69.38712179999999,72.89947204000001,56.47359851,54.66377012,67.28927203000001,62.6951151,67.62711863999999],[36068,391449,83540,8719,11919,74164,15570,20555,37540,124237,26379,32843,10536,33418,43731,51138,26416,112031,43632,206890,23349,80714,16574,23028,20327,32993,66022,31006,364921,83070,39851,182534,48915,83574,36834,46300,33281,20198,32946,27536,165782,35789,80826,111675,40866,499689,45222,131744,969466,46332,9803,35674,139745,38273,72236,13823,47367,6114,19623,21482,16369,19183,12168,174791,25063,12485,37301,24437,29087,16673,24588,44991,19967,272234,23258,34725,20670,10006,188717,15361,6952,179744,15451,106006,30828,8461,65185,28224,66273,28335,24598,34627],[70.84252562,12.91870995,30.69409303,100,49.34775429,27.19171892,100,94.56810795,46.20015844,21.33071276,59.99773294000001,49.45766797,100,61.29534765,52.97353519,60.21034353,52.67074645,23.05925668,47.59951417,23.25752124,38.45200444,34.05148849,100,88.86109282,64.19433594,74.72660628,38.56525782,82.80037659,5.74068904,27.6753507,85.63574923,15.24074879,62.06607515,25.66042698,52.11663303,47.77504954,83.26447536000001,68.92274635999999,47.36476906,74.88139644,12.7345223,45.4274847,48.36365902,36.52116673,100,4.53679567,67.93672658,24.62248999,0.87944879,73.36153596,100,45.55920138,21.19626677,52.91280051,54.10002786,100,77.69138378,100,100,100,99.37484526,54.29838289,100,23.57936668,70.41075252,100,72.25398899999999,66.56599461,81.36575271999999,61.38371538000001,68.92224408999999,52.59127733,100,10.0193469,100,63.15957600999999,76.58644377,100,15.65145959,61.54046487,100,7.956766,58.65664875,24.76708148,50.14850207,100,26.74105606,76.52047406,37.69927727,63.28601845,61.39014906,69.08543184],["Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Female","Female","Male","Male","Male","Male","Male","Female","Male","Female","Female","Female","Male","Male","Male","Male","Female","Male","Female","Female","Male","Male","Male","Female","Female","Male","Male","Male","Female","Male","Female","Male","Male","Male","Male","Female","Male","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Female","Male","Male","Male","Male","Male","Female","Female","Male","Male","Female","Male","Male","Male","Male","Male","Male","Female","Female","Male","Male","Female","Male","Female","Male","Female","Female","Male","Male"],["Mixed","Urban","Mixed","Rural","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Rural","Rural","Rural","Mixed","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Rural","Mixed","Mixed","Rural","Urban","Mixed","Rural","Urban","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed"],[21199,247844,53069,5582,6902,59809,11313,12640,21029,81250,16139,19348,6336,17444,26358,33944,16314,58594,30626,110782,13240,56639,10426,15996,12482,21050,34622,18310,308189,61448,26076,132332,27006,53851,23262,27930,20364,11107,19100,16033,112494,20014,50039,65203,16566,306577,26930,68240,566627,27888,6379,18602,75986,22708,48464,8546,26550,3966,11530,12976,8773,11150,7855,116629,16771,7535,20982,14493,19311,10279,13593,26700,13600,158647,13707,20629,11202,5150,98075,10529,4374,100152,9640,55417,18314,5870,47519,15939,36227,19066,15421,23417]],"container":"<table class=\"cell-border stripe\">\n  <thead>\n    <tr>\n      <th>Percent Female Population<\/th>\n      <th>Percent Voter Turnout<\/th>\n      <th>Population<\/th>\n      <th>Percent Rural Population<\/th>\n      <th>Majority Gender<\/th>\n      <th>Ruralness<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"lrtip","language":{"info":"Showing _TOTAL_ entries"},"paging":true,"lengthMenu":[5,10,50],"pageLength":10,"scrollY":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,7]},{"name":"county","targets":0},{"name":"female_raw","targets":1},{"name":"voter_turnout","targets":2},{"name":"county_population","targets":3},{"name":"rural_raw","targets":4},{"name":"gender","targets":5},{"name":"urban","targets":6},{"name":"votes","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="michigan" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-michigan">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 60fr) minmax(3em, 40fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 20fr) minmax(3em, 40fr) minmax(3em, 40fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-primary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Population
+</p>
+<p class="value-box-value">
+10034113
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-secondary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Voter Turnout
+</p>
+<p class="value-box-value">
+73.7%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-green4" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Rural Voter Turnout
+</p>
+<p class="value-box-value">
+19.4%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-orange" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Female Voter Turnout
+</p>
+<p class="value-box-value">
+37.1%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Gender" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Gender</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-31"><li class="nav-item" role="presentation"><a href="#card-tabset-31-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Population" aria-selected="true" class="nav-link active">Gender and County Population</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-31-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Ruralness" aria-selected="false" class="nav-link">Gender and County Ruralness</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-31-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="County Ruralness and Population" aria-selected="false" class="nav-link">County Ruralness and Population</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-31"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-31-1"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-31-2"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Ruralness">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-31-3"><div class="card-body html-fill-item html-fill-container" data-title="County Ruralness and Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Data" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Data</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-67fec36c36abf14d2959" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-67fec36c36abf14d2959">{"x":{"filter":"none","vertical":false,"data":[["Alcona County","Alger County","Allegan County","Alpena County","Antrim County","Arenac County","Baraga County","Barry County","Bay County","Benzie County","Berrien County","Branch County","Calhoun County","Cass County","Charlevoix County","Cheboygan County","Chippewa County","Clare County","Clinton County","Crawford County","Delta County","Dickinson County","Eaton County","Emmet County","Genesee County","Gladwin County","Gogebic County","Grand Traverse County","Gratiot County","Hillsdale County","Houghton County","Huron County","Ingham County","Ionia County","Iosco County","Iron County","Isabella County","Jackson County","Kalamazoo County","Kalkaska County","Kent County","Keweenaw County","Lake County","Lapeer County","Leelanau County","Lenawee County","Livingston County","Luce County","Mackinac County","Macomb County","Manistee County","Marquette County","Mason County","Mecosta County","Menominee County","Midland County","Missaukee County","Monroe County","Montcalm County","Montmorency County","Muskegon County","Newaygo County","Oakland County","Oceana County","Ogemaw County","Ontonagon County","Osceola County","Oscoda County","Otsego County","Ottawa County","Presque Isle County","Roscommon County","Saginaw County","Sanilac County","Schoolcraft County","Shiawassee County","St. Clair County","St. Joseph County","Tuscola County","Van Buren County","Washtenaw County","Wayne County","Wexford County"],[49.29442258,43.88554559,49.60316806,50.20626061999999,49.88659326,48.67784479,44.70218678,49.34229158999999,50.45370109,49.51631415,50.74231524,48.49879859,50.59682344000001,49.69554306000001,49.83455673,49.27139553,45.03623288,49.57897423,50.32853488,48.34334,49.79178574,48.99513025,50.52022167,50.06878786999999,51.46759938,49.2420709,48.62071374,50.40014927999999,46.07055961,49.87107207,45.38139598,49.67677931,51.00947527,44.66314419,49.66498178,49.75907761000001,50.9441867,48.51811128,50.91146481,48.75701243,50.278493,49.31192661,44.67206606,48.46249155,50.11368605,49.18684753,49.50831205,47.91744841,49.3921945,50.96551685,48.04444972,49.39469855,50.09690911,49.51620825,48.25066621,50.30714439,48.85952804,50.06715550000001,46.34229532,48.24955586,49.67349135,49.12156585,50.53256144,48.7672858,49.75679542,48.43936551,48.99888287,48.81009043,49.53595383,50.22983119,49.44989148000001,49.35043023,51.19205650000001,49.56834002,49.79237909,50.19993532,49.8423363,49.50225055,49.06223439,49.98018285,50.09361967,51.48103945,49.65785472],[78.4017758,67.07652059999999,77.42210939,74.08426108,84.38624339,72.14869281,59.16483516,76.37736652,73.41903253,85.12322109999999,70.80697834,63.67751938,65.8627714,64.7308642,80.70258723000001,75.13257575999999,58.81646941,66.52093972999999,79.52049112,69.65883916999999,73.81259815,72.08003952999999,75.74119863,83.45061148000001,71.09797813,71.46072914,66.98541329,82.40782543,58.91575543,65.54711674000001,67.27636364,73.80704564,66.10568678,64.9375,73.70112736999999,73.55362947,51.59768501999999,66.02784469000001,71.85790159,75.98999284999999,77.37765347999999,87.71830986000001,64.32349949,76.71013330999999,94.33435668,69.8442816,85.64012792,57.87849566,79.40011319,75.08750608,72.87419194,69.43193402,75.39436311999999,59.86632537,67.65226724,76.28875592999999,76.06429192,74.70255443000001,65.53695386,74.11764706,69.95648719,73.00362853999999,83.26003664,72.57806452,70.31000886,74.58823529,68.45641310000001,73.01872659,76.40176029,78.76056206999999,78.49482596,74.42021803999999,69.69384315000001,70.02339729000001,71.29977461,73.33644946999999,73.93807975,62.92600518,70.54384284000001,70.24363930999999,77.89723747000001,68.3413035,71.51527016],[10417,8807,121210,28847,24249,15089,8277,63554,102821,18297,152900,44531,133289,51403,26293,25940,36293,31352,79748,13491,36741,25874,108992,34163,401983,25728,14319,96464,41100,45762,37035,31248,284108,66809,25521,11622,64447,160066,261173,18182,659083,2180,12594,88780,22870,98567,196161,5330,10941,874195,25287,66661,29409,40720,23266,83674,15213,155609,67433,9569,176565,50886,1269431,26973,20970,5863,23274,8404,25644,300873,13361,23708,188330,40657,8188,68022,160151,60874,52945,75692,366376,1757043,34196],[92.90842923,100,67.57813148,46.63922233,100,87.54166111000001,100,87.11853003,28.939108,85.5147468,30.09668472,69.41509517999999,32.34234234,74.10300645,69.80118216,78.84983776,51.12953649999999,87.69769251,51.31938126,99.83831229,42.66319811,35.24877635,37.98488665,63.13027674,18.1991625,100,64.08205841,43.17289317,58.29362324,76.73676387,45.21024598,100,14.56756757,61.01730435,49.75234774,100,52.26573904,47.28433708,21.63870524,100,16.18863359,100,100,85.94996558,87.58351643,56.86108848,39.5128594,100,74.67232786,3.20999254,67.66938319,45.49888665,59.09748038,74.47751423,63.16909199000001,43.21627901,100,37.72132111,84.59032636000001,100,26.01351351,89.6654528,5.54223769,100,100,100,100,100,66.21896296999999,21.19885213,100,43.87228782,32.61503019,93.64457905,100,59.78353453,39.50605738,63.71945716,89.90491908,78.05178139,17.19479501,0.8968192300000001,63.74543403000001],["Male","Male","Male","Female","Male","Male","Male","Male","Female","Male","Female","Male","Female","Male","Male","Male","Male","Male","Female","Male","Male","Male","Female","Female","Female","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Female","Male","Female","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Female","Male","Male","Female","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Female","Male","Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Female","Male"],["Rural","Rural","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Urban","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Urban","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Urban","Rural","Rural","Rural","Rural","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Urban","Mixed"],[8167,5907,93843,21371,20462,10886,4897,48540,75490,15574,108263,28356,87787,33273,21219,19489,21346,20855,63416,9397,27119,18649,82551,28509,285801,18385,9591,79493,24214,29995,24915,23063,187811,43384,18809,8548,33253,105688,187673,13816,509982,1912,8100,68103,21574,68843,167992,3084,8687,656411,18427,46284,22172,24377,15739,63833,11571,116243,44193,7092,123518,37148,1056928,19576,14744,4373,15932,6136,19592,236969,10487,17643,131254,28469,5838,49884,118412,38305,37349,53168,285396,1200786,24455]],"container":"<table class=\"cell-border stripe\">\n  <thead>\n    <tr>\n      <th>Percent Female Population<\/th>\n      <th>Percent Voter Turnout<\/th>\n      <th>Population<\/th>\n      <th>Percent Rural Population<\/th>\n      <th>Majority Gender<\/th>\n      <th>Ruralness<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"lrtip","language":{"info":"Showing _TOTAL_ entries"},"paging":true,"lengthMenu":[5,10,50],"pageLength":10,"scrollY":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,7]},{"name":"county","targets":0},{"name":"female_raw","targets":1},{"name":"voter_turnout","targets":2},{"name":"county_population","targets":3},{"name":"rural_raw","targets":4},{"name":"gender","targets":5},{"name":"urban","targets":6},{"name":"votes","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="minnesota" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-minnesota">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 60fr) minmax(3em, 40fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 20fr) minmax(3em, 40fr) minmax(3em, 40fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-primary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Population
+</p>
+<p class="value-box-value">
+5717184
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-secondary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Voter Turnout
+</p>
+<p class="value-box-value">
+79.8%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-green4" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Rural Voter Turnout
+</p>
+<p class="value-box-value">
+21.9%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-orange" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Female Voter Turnout
+</p>
+<p class="value-box-value">
+39.7%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Gender" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Gender</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-39"><li class="nav-item" role="presentation"><a href="#card-tabset-39-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Population" aria-selected="true" class="nav-link active">Gender and County Population</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-39-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Ruralness" aria-selected="false" class="nav-link">Gender and County Ruralness</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-39-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="County Ruralness and Population" aria-selected="false" class="nav-link">County Ruralness and Population</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-39"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-39-1"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-39-2"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Ruralness">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-39-3"><div class="card-body html-fill-item html-fill-container" data-title="County Ruralness and Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Data" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Data</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-60bc545cbdb6378accab" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-60bc545cbdb6378accab">{"x":{"filter":"none","vertical":false,"data":[["Aitkin County","Anoka County","Becker County","Beltrami County","Benton County","Big Stone County","Blue Earth County","Brown County","Carlton County","Carver County","Cass County","Chippewa County","Chisago County","Clay County","Clearwater County","Cook County","Cottonwood County","Crow Wing County","Dakota County","Dodge County","Douglas County","Faribault County","Fillmore County","Freeborn County","Goodhue County","Grant County","Hennepin County","Houston County","Hubbard County","Isanti County","Itasca County","Jackson County","Kanabec County","Kandiyohi County","Kittson County","Koochiching County","Lac qui Parle County","Lake County","Lake of the Woods County","Le Sueur County","Lincoln County","Lyon County","Mahnomen County","Marshall County","Martin County","McLeod County","Meeker County","Mille Lacs County","Morrison County","Mower County","Murray County","Nicollet County","Nobles County","Norman County","Olmsted County","Otter Tail County","Pennington County","Pine County","Pipestone County","Polk County","Pope County","Ramsey County","Red Lake County","Redwood County","Renville County","Rice County","Rock County","Roseau County","Scott County","Sherburne County","Sibley County","St. Louis County","Stearns County","Steele County","Stevens County","Swift County","Todd County","Traverse County","Wabasha County","Wadena County","Waseca County","Washington County","Watonwan County","Wilkin County","Winona County","Wright County","Yellow Medicine County"],[49.15044028000001,49.54292097,49.67063414,49.46045856,49.35484649,48.95023328,49.47939854000001,49.50044707,46.87534053,49.73553629,48.49715419,49.74763921,47.88404497,50.07508077,48.79176783,49.91240364,49.61253963,49.90139518,50.23604855,49.23502216,49.52354543,49.39681172,49.29018399,49.73631096,49.71986754,49.21773142,50.17256279,49.31914894000001,49.00273224,48.98541906,49.29100763,48.28666734,49.42598554,49.38981271999999,49.56885932,49.18101993,48.73673195,48.49620623,47.66210282,48.75313003999999,48.88888889,49.83374238,48.66741742,48.94481436,49.97455471,49.65953042,48.28907048,49.06158358,49.12398528,49.19282511,49.54094293,49.42365204,47.98833554,49.03559668,50.97853919999999,49.30517689,49.77970386000001,46.79073558,50.12292892,49.54280694,48.7096492,50.83210138,48.58027878,49.70379533,48.46127367,48.28711979,50.28835063,47.71122155,49.72171887,48.26430215,48.77298562,49.59605476999999,49.24410087,49.93047757,49.2061845,49.06201948,47.89725116,48.79389313,49.75990396,49.87069267,51.00301699000001,50.17288121,49.81489842,47.00787402,49.9939367,48.97468294999999,49.0723171],[76.06221547999999,81.325039,75.37296037,69.83975747,75.74004764,76.84754522,69.33551303,75.55498193,74.35298412,89.98101695,78.83189655,76.33949192,80.90334659,68.35365207000001,70.85026336,87.19358534,75.81626319,79.42467378000001,85.9076913,81.16550117,81.56962025,75.37142856999999,77.30659025999999,73.92527473,81.12181303,80.13157895000001,83.21250881,78.76075731,77.61149356,80.34145533,74.54673027999999,76.51545036,72.68580417,76.00260205000001,79.48795181,70.30980193000001,76.80608365000001,82.92458261,80.40066778000001,79.01338971,72.69544924,70.76289791000001,61.03311258,71.31101813000001,71.48701299,77.60148285,77.97694523999999,74.98213373999999,77.96691249999999,71.08212383,77.59112519999999,74.09918636,66.40000000000001,70.58461538,82.15489728999999,80.83277815,67.97758057,68.35113199,75.88325653,66.78372591,80.06841505,76.2257591,72.8358209,73.08337009,74.19443177000001,73.05220061,74.85714286000001,74.19383259999999,85.46514452,80.10370904,77.71954022999999,74.73490059,71.93064270000001,79.01271503000001,69.37244202000001,74.29184549,72.80065897999999,71.5547025,78.27617059000001,76.73163418,74.71413161,87.6345103,70.5220339,70.14314927999999,66.85447164,84.85715755999999,74.8037889],[16126,368864,35371,46799,41463,5144,69631,25723,36708,110034,31274,12284,57988,65929,8649,5708,11356,67948,443341,20981,39668,13926,21414,30718,48013,6136,1260121,18800,21960,42727,45205,9893,16463,43839,4059,11844,6689,10939,3871,29153,5580,25262,5328,8861,19650,36714,23496,27280,34246,40140,8060,34441,21947,6377,164020,60519,13845,29446,9355,30731,11431,536413,3874,15361,14525,67693,9537,15292,154520,100824,14955,199532,160405,37398,9637,9755,25538,3275,21658,14307,18893,275912,11075,6350,49478,148003,9486],[100,15.90246423,70.91208822,67.87877477000001,45.03492110000001,100,33.57304086,48.15143563,63.50705665,24.65067993,100,57.20749325,65.65585206999999,25.79227778,100,100,100,68.71436564999999,4.98110857,63.34403604,51.39978465,100,100,41.76403949,66.91185743,100,2.3880958,71.01841533,100,59.28284916,77.01159639000001,100,100,42.96167566,100,45.4899685,100,100,100,85.7745693,100,46.54319522,100,100,58.11735331,44.49974164,71.92735043,81.84738652,72.32872685000001,36.34864723,100,25.21042549,38.08882907,100,17.36845014,77.91980826,36.44939966,100,100,46.53436779,62.84046693000001,0.02009588,100,70.12641815000001,100,32.18772821,50.45342127,100,18.1020089,50.92866036,100,39.2876228,37.98865388,29.74923809,47.98883259,100,99.42205684,100,81.18015616999999,71.84500533000001,51.43926613000001,13.36632183,100,47.95573316999999,40.34144672,39.16808762,100],["Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Female","Male","Male","Male","Male","Male"],["Rural","Urban","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Rural","Rural","Mixed","Urban","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Rural","Urban","Mixed","Rural","Mixed","Mixed","Rural","Rural","Mixed","Rural","Mixed","Rural","Rural","Rural","Mixed","Rural","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Urban","Rural","Mixed","Rural","Mixed","Mixed","Rural","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Rural","Rural","Mixed","Mixed","Mixed","Urban","Rural","Mixed","Mixed","Mixed","Rural"],[12265,299978,26660,32684,31404,3953,48279,19435,27293,99009,24653,9377,46914,45064,6127,4977,8609,53967,380864,17029,32357,10496,16554,22708,38949,4916,1048578,14807,17043,34327,33698,7569,11966,33318,3226,8327,5137,9071,3112,23034,4056,17876,3251,6318,14047,28490,18321,20455,26700,28532,6253,25520,14572,4501,134750,48919,9411,20126,7098,20523,9152,408884,2821,11226,10776,49451,7139,11345,132060,80763,11622,149120,115380,29549,6685,7247,18591,2343,16953,10977,14115,241794,7810,4454,33078,125591,7095]],"container":"<table class=\"cell-border stripe\">\n  <thead>\n    <tr>\n      <th>Percent Female Population<\/th>\n      <th>Percent Voter Turnout<\/th>\n      <th>Population<\/th>\n      <th>Percent Rural Population<\/th>\n      <th>Majority Gender<\/th>\n      <th>Ruralness<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"lrtip","language":{"info":"Showing _TOTAL_ entries"},"paging":true,"lengthMenu":[5,10,50],"pageLength":10,"scrollY":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,7]},{"name":"county","targets":0},{"name":"female_raw","targets":1},{"name":"voter_turnout","targets":2},{"name":"county_population","targets":3},{"name":"rural_raw","targets":4},{"name":"gender","targets":5},{"name":"urban","targets":6},{"name":"votes","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="ohio" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-ohio">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 60fr) minmax(3em, 40fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 20fr) minmax(3em, 40fr) minmax(3em, 40fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-primary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Population
+</p>
+<p class="value-box-value">
+11756058
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-secondary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Voter Turnout
+</p>
+<p class="value-box-value">
+67.1%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-green4" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Rural Voter Turnout
+</p>
+<p class="value-box-value">
+15.6%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-orange" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Female Voter Turnout
+</p>
+<p class="value-box-value">
+33.9%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Gender" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Gender</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-47"><li class="nav-item" role="presentation"><a href="#card-tabset-47-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Population" aria-selected="true" class="nav-link active">Gender and County Population</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-47-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Ruralness" aria-selected="false" class="nav-link">Gender and County Ruralness</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-47-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="County Ruralness and Population" aria-selected="false" class="nav-link">County Ruralness and Population</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-47"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-47-1"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-47-2"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Ruralness">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-47-3"><div class="card-body html-fill-item html-fill-container" data-title="County Ruralness and Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-61-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Data" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Data</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-63c71fb19372b764ae65" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-63c71fb19372b764ae65">{"x":{"filter":"none","vertical":false,"data":[["Adams County","Allen County","Ashland County","Ashtabula County","Athens County","Auglaize County","Belmont County","Brown County","Butler County","Carroll County","Champaign County","Clark County","Clermont County","Clinton County","Columbiana County","Coshocton County","Crawford County","Cuyahoga County","Darke County","Defiance County","Delaware County","Erie County","Fairfield County","Fayette County","Franklin County","Fulton County","Gallia County","Geauga County","Greene County","Guernsey County","Hamilton County","Hancock County","Hardin County","Harrison County","Henry County","Highland County","Hocking County","Holmes County","Huron County","Jackson County","Jefferson County","Knox County","Lake County","Lawrence County","Licking County","Logan County","Lorain County","Lucas County","Madison County","Mahoning County","Marion County","Medina County","Meigs County","Mercer County","Miami County","Monroe County","Montgomery County","Morgan County","Morrow County","Muskingum County","Noble County","Ottawa County","Paulding County","Perry County","Pickaway County","Pike County","Portage County","Preble County","Putnam County","Richland County","Ross County","Sandusky County","Scioto County","Seneca County","Shelby County","Stark County","Summit County","Trumbull County","Tuscarawas County","Union County","Van Wert County","Vinton County","Warren County","Washington County","Wayne County","Williams County","Wood County","Wyandot County"],[49.99270605,49.89961925,50.35740979,48.71874162,49.92624493,49.68442587,48.16437436,50.19001831999999,50.51155965,49.17288721,50.13046061999999,50.94970741,50.28865539,50.3288533,49.01155097,49.92753821,50.55392321999999,51.90353718,49.99708902,49.66087936,49.91515536999999,50.66106495,49.93308696,50.75071951,50.78081736,49.85179389,49.84175038,49.74284846,50.22379730999999,49.95012862,51.35696945,50.27183714,49.71067859,50.0695507,50.07633033,50.3814155,49.89590064,49.57422843,49.94159882,50.11354569,50.9233639,50.3584825,50.82556224,50.89933455,50.33497097,49.98479583,50.35729192,51.33566002,45.82452917,50.82832526999999,46.73277436,50.20216662,49.71095635,49.10975725,50.24807931,49.23681427,51.52802439000001,49.85367281,49.42414896,50.80301464,40.16044646,49.80989544,49.63480301,49.52931229,47.62674308,49.86854286,50.55921358,49.88915164,49.51360168,48.58082174,47.57721327,49.83039869,50.27426102,49.59181432,49.49759812,50.98575902,51.22023132,50.60929113,50.0375257,51.24517923000001,50.41190169999999,49.45483486000001,49.35462691,50.58997301,49.91978311,49.88268034,50.36096419,50.26197431],[57.9022646,61.34560092,64.29267105000001,58.53487139,47.74022167,74.71594203000001,60.67296232,62.98253471,66.55866838,65.81153045000001,66.40731505000001,62.29638613,70.58297397,64.35804985,61.34727776,59.99641577,64.22229121000001,65.69334635,69.76218023,66.9927411,87.63076495,68.75479417,71.47784308,58.61956774,67.37653595,71.1673699,60.10017422,78.30724070000001,68.03776336,60.23459442,71.02425276,67.68680168,55.47319933,64.32773109,71.72212775999999,60.27262981,62.59452116999999,42.84957802,62.13436929,59.87049777,62.84637845,66.36651870999999,72.89173113000001,60.46866601999999,70.64602001999999,67.60595979,66.20702706,61.75865784,57.10382514,65.78522450999999,54.4543408,76.86301569,61.55705453,79.07154742,71.85869228,65.18923849000001,66.66873580000001,59.46157185999999,68.13215208999999,61.08385539,54.35304198999999,72.90312785,66.52846100000001,60.5373026,62.22295586999999,58.28598263,64.17967086,68.89590902,79.50908002,63.78622707,55.41059988,66.75693674,54.50633557,60.64379699,69.75421154,65.74757618,67.52934377999999,64.02599049,62.75753903,78.4449396,69.57229196,59.673429,80.82187712999999,66.93344478,62.73678128,66.37366548,66.21963166,67.41639538000001],[27420,101115,52181,97014,58979,45948,65509,43680,388420,26659,38709,134831,210805,41964,100511,36571,41522,1236041,51529,38187,226296,74501,162898,28839,1321820,42171,29068,95469,168456,38098,825037,74861,30416,14378,27512,43391,27858,44390,58218,32586,64330,63183,231842,56653,181359,46040,316268,426643,43540,225636,64642,183512,21969,42348,110247,13234,533892,13668,35339,86113,14335,39978,18757,35480,60023,27005,161745,40596,34334,125319,76606,58667,72194,54632,47671,372657,535882,200643,91937,66898,28769,12565,249778,58901,116559,36652,131592,21567],[100,30.97567657,63.38017427,51.98720971,48.69696145,38.70578605,61.50954178,95.79631834,9.6106897,100,70.61786434,25.38510746,26.26928922,70.14136799000001,55.49731539,66.31159183000001,34.08447353,0.5655363600000001,71.7295349,53.57310766,20.32934188,28.18888683,35.58938089,48.08814894,1.37263211,82.1529745,80.36618754,78.55383293,22.42477644,62.46682970000001,2.38202155,31.80859584,56.42428981,100,67.94158050999999,73.71932498,70.60962567,100,51.42661999,64.23912045,39.27416512,69.71827618,7.51022128,45.27815934,33.78071802,55.63380282,14.26362137,4.985172009999999,66.16009493,15.64339892,34.68688321,34.05929742,88.02791535,71.59518435,30.58267601,98.66268211000001,5.523637239999999,100,99.98855508,51.04617521,100,62.46655436,100,80.45921826,60.45542288,81.65608386999999,37.99593302,76.25795751,84.22977562,33.65403086,58.84580961,43.24741918,55.33861204,45.59915742,57.01015965000001,14.75831859,3.78200241,27.17784698,49.84506181,45.0066896,50.42342124,94.3203125,17.51734155,58.33765538,55.84033398,75.10107271999999,30.07077612,69.73515982000001],["Male","Male","Female","Male","Male","Male","Male","Female","Female","Male","Female","Female","Female","Female","Male","Male","Female","Female","Male","Male","Male","Female","Male","Female","Female","Male","Male","Male","Female","Male","Female","Female","Male","Female","Female","Female","Male","Male","Male","Female","Female","Female","Female","Female","Female","Male","Female","Female","Male","Female","Male","Female","Male","Male","Female","Male","Female","Male","Male","Female","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Female","Male","Male","Female","Female","Female","Female","Female","Female","Male","Male","Female","Male","Male","Female","Female"],["Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Urban","Urban","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Rural","Rural","Mixed","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Urban","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Mixed","Mixed","Mixed"],[15876,62029,33548,56787,28156,34330,39746,27510,258527,17544,25705,83994,148792,27007,61660,21941,26666,811996,35947,25582,198304,51223,116435,16905,890596,30011,17469,74759,114613,22948,585976,50671,16872,9249,19732,26152,17437,19020,36173,19509,40429,41932,168993,34257,128122,31125,209391,263488,24863,148435,35200,141052,13523,33485,79222,8627,355939,8127,24077,52601,7791,29145,12478,21478,37348,15740,103807,27968,27298,79936,42447,39164,39350,33130,33252,245012,361877,128463,57697,52478,20015,7497,201875,39424,73125,24327,87139,14539]],"container":"<table class=\"cell-border stripe\">\n  <thead>\n    <tr>\n      <th>Percent Female Population<\/th>\n      <th>Percent Voter Turnout<\/th>\n      <th>Population<\/th>\n      <th>Percent Rural Population<\/th>\n      <th>Majority Gender<\/th>\n      <th>Ruralness<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"lrtip","language":{"info":"Showing _TOTAL_ entries"},"paging":true,"lengthMenu":[5,10,50],"pageLength":10,"scrollY":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,7]},{"name":"county","targets":0},{"name":"female_raw","targets":1},{"name":"voter_turnout","targets":2},{"name":"county_population","targets":3},{"name":"rural_raw","targets":4},{"name":"gender","targets":5},{"name":"urban","targets":6},{"name":"votes","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="wisconsin" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="columns" aria-labelledby="tab-wisconsin">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 60fr) minmax(3em, 40fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 20fr) minmax(3em, 40fr) minmax(3em, 40fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-primary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Population
+</p>
+<p class="value-box-value">
+5892539
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-secondary" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Voter Turnout
+</p>
+<p class="value-box-value">
+75.1%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-green4" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Rural Voter Turnout
+</p>
+<p class="value-box-value">
+24.8%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box bg-orange" data-bslib-card-init="" data-require-bs-caller="card()">
+<div class="card-body html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-area">
+<p class="value-box-title">
+Estimated Female Voter Turnout
+</p>
+<p class="value-box-value">
+37.4%
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Ruralness" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Ruralness</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card cell html-fill-item html-fill-container bslib-card" data-title="Voter Turnout by Gender" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Voter Turnout by Gender</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-55"><li class="nav-item" role="presentation"><a href="#card-tabset-55-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Population" aria-selected="true" class="nav-link active">Gender and County Population</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-55-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Gender and County Ruralness" aria-selected="false" class="nav-link">Gender and County Ruralness</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-55-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="County Ruralness and Population" aria-selected="false" class="nav-link">County Ruralness and Population</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-55"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-55-1"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-55-2"><div class="card-body html-fill-item html-fill-container" data-title="Gender and County Ruralness">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-55-3"><div class="card-body html-fill-item html-fill-container" data-title="County Ruralness and Population">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="dashboard_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Data" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title html-fill-item html-fill-container">Data</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-50d6986e9c3e815ae380" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-50d6986e9c3e815ae380">{"x":{"filter":"none","vertical":false,"data":[["Adams County","Ashland County","Barron County","Bayfield County","Brown County","Buffalo County","Burnett County","Calumet County","Chippewa County","Clark County","Columbia County","Crawford County","Dane County","Dodge County","Door County","Douglas County","Dunn County","Eau Claire County","Florence County","Fond du Lac County","Forest County","Grant County","Green County","Green Lake County","Iowa County","Iron County","Jackson County","Jefferson County","Juneau County","Kenosha County","Kewaunee County","La Crosse County","Lafayette County","Langlade County","Lincoln County","Manitowoc County","Marathon County","Marinette County","Marquette County","Menominee County","Milwaukee County","Monroe County","Oconto County","Oneida County","Outagamie County","Ozaukee County","Pepin County","Pierce County","Polk County","Portage County","Price County","Racine County","Richland County","Rock County","Rusk County","Sauk County","Sawyer County","Shawano County","Sheboygan County","St. Croix County","Taylor County","Trempealeau County","Vernon County","Vilas County","Walworth County","Washburn County","Washington County","Waukesha County","Waupaca County","Waushara County","Winnebago County","Wood County"],[45.98605484,49.37340233,49.62534423,49.03660886,49.99888904,49.07773878,48.61469829,49.14640161,47.95006511,48.95506039,48.7378207,47.61042044,49.89449193,47.34827032,50.04258665,49.35212033,49.2891722,50.29343767,48.12286689,50.29951077,49.48299755,48.25649427,49.22588005,49.45369407,49.10119422,49.14845758,46.32367057,49.61997575,46.41926599,50.25533766,48.95505019,50.79056312,48.97197369,49.06181298,49.00620242,49.39264771,49.36429928,48.93064685,48.2730211,51.15558732,51.32938048,49.01212345,48.2274872,49.10237622,49.63227449,50.23707383,48.56950067,49.83541804,48.91596841,49.16852852,48.16277594,50.31912829,49.24517262,50.21272705,48.62540533,49.8776168,48.83345008,49.26869833,49.04065648,49.54226856,48.78097622,48.93362245,49.32710882,48.31460674,49.6299108,49.648158,49.8925106,50.2784857,48.98617154,46.78987159,49.23558149,50.22096685],[69.43595769999999,72.76277524,72.47926794,87.63592429000001,74.98346914,75.69975787,80.45220150999999,81.66113838,72.37539019,62.53095488,76.40198511,67.71806854,84.68194321999999,69.96894186,88.32930845,71.63134977999999,65.88432992999999,71.25825385,80.65843620999999,72.81526232,70.37604456999999,63.36261289,75.86744639,73.79668049999999,77.19724138000001,83.19502075,64.37420985999999,73.32314511,65.15684410999999,71.38731346,76.62337662,72.35171862999999,69.35549250000001,73.09328968999999,73.49966585,72.72712524000001,74.83157022,70.76994148,73.57954545,51.79153093999999,67.8238832,66.53229365999999,77.01111295000001,82.76464543,77.17235221,89.36269166000001,72.76558385,70.38031995,77.00686232,72.64156007,78.11700182999999,73.01165981,67.19344018,70.52505474,70.78994614,75.06323865,78.99285983,70.96015061,75.89215912,85.06262657000001,69.38961039,71.80205415,70.62763362,84.46826051000001,72.97605473,81.84542587,84.23317871,87.11209348,72.79770086000001,69.33060807,70.48347200000001,73.34694965],[21226,16039,46843,16608,270036,13391,17036,52718,66807,34691,58193,16007,568203,88282,30526,44144,45651,106837,4688,103836,9381,51276,36816,19220,23865,6224,20836,85784,26866,167817,20623,120294,16877,19559,28376,81172,137958,41988,15779,4197,918661,46109,39633,38212,192127,93009,7410,42532,45709,70718,14179,195846,17090,164060,14186,65777,18559,40886,117841,96017,19975,30899,31060,23763,105380,16911,137688,410434,51488,24999,170718,73993],[100,54.9198228,78.25779795,100,16.59001265,100,100,52.62957172,62.52168273000001,100,66.24209266999999,63.00502700000001,13.5769291,54.88612466,68.63899421000001,38.61383903,62.53961268,23.72717813,100,36.25688884,100,77.20743964,71.08618877000001,72.64696603,79.34117845999999,67.15007333,79.12035942,44.50058893,100,13.08298503,100,18.10918665,100,58.59114463,66.50008798,42.77461621,43.38866629,60.76136798,100,100,0.27695907,56.77270172999999,100,74.26872771000001,25.39314648,24.3117712,100,69.9540415,100,36.60570925,100,14.34705427,71.54415164,20.03885464,100,44.70446908,100,70.08634818,29.35933714,63.98819706,79.34012955999999,100,86.83336589,100,36.90527621,100,38.35888886,15.20770164,63.64162742,99.6451876,17.41396378,35.47778511],["Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Female","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Female","Male","Male","Male","Male","Male","Male","Male","Female","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Female","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Female"],["Rural","Mixed","Mixed","Rural","Urban","Rural","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Rural","Urban","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Rural","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Rural","Urban","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Rural","Mixed","Urban","Mixed","Rural","Urban","Mixed"],[14738,11670,33951,14554,202482,10136,13705,43050,48351,21692,44460,10839,481165,61769,26963,31620,30076,76130,3781,75608,6601,32489,27931,14183,18423,5178,13413,62899,17505,119800,15802,87034,11705,14296,20856,59034,103236,29714,11610,2173,623071,30677,30521,31626,148268,83115,5391,29934,35199,51370,11076,142990,11483,115703,10042,49374,14660,29012,89432,81674,13860,22186,21936,20072,76902,13840,115978,357537,37482,17331,120327,54271]],"container":"<table class=\"cell-border stripe\">\n  <thead>\n    <tr>\n      <th>Percent Female Population<\/th>\n      <th>Percent Voter Turnout<\/th>\n      <th>Population<\/th>\n      <th>Percent Rural Population<\/th>\n      <th>Majority Gender<\/th>\n      <th>Ruralness<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"lrtip","language":{"info":"Showing _TOTAL_ entries"},"paging":true,"lengthMenu":[5,10,50],"pageLength":10,"scrollY":true,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,7]},{"name":"county","targets":0},{"name":"female_raw","targets":1},{"name":"voter_turnout","targets":2},{"name":"county_population","targets":3},{"name":"rural_raw","targets":4},{"name":"gender","targets":5},{"name":"urban","targets":6},{"name":"votes","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div><div id="data" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-data">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="datatables html-widget html-fill-item html-fill-container" id="htmlwidget-acc263a7b0104439e9a4" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-acc263a7b0104439e9a4">{"x":{"filter":"none","vertical":false,"data":[["17001","17003","17005","17007","17009","17011","17013","17015","17017","17019","17021","17023","17025","17027","17029","17031","17033","17035","17037","17039","17041","17043","17045","17047","17049","17051","17053","17055","17057","17059","17061","17063","17065","17067","17069","17071","17073","17075","17077","17079","17081","17083","17085","17087","17089","17091","17093","17095","17097","17099","17101","17103","17105","17107","17109","17111","17113","17115","17117","17119","17121","17123","17125","17127","17129","17131","17133","17135","17137","17139","17141","17143","17145","17147","17149","17151","17153","17155","17157","17159","17161","17163","17165","17167","17169","17171","17173","17175","17177","17179","17181","17183","17185","17187","17189","17191","17193","17195","17197","17199","17201","17203","18001","18003","18005","18007","18009","18011","18013","18015","18017","18019","18021","18023","18025","18027","18029","18031","18033","18035","18037","18039","18041","18043","18045","18047","18049","18051","18053","18055","18057","18059","18061","18063","18065","18067","18069","18071","18073","18075","18077","18079","18081","18083","18085","18087","18089","18091","18093","18095","18097","18099","18101","18103","18105","18107","18109","18111","18113","18115","18117","18119","18121","18123","18125","18127","18129","18131","18133","18135","18137","18139","18141","18143","18145","18147","18149","18151","18153","18155","18157","18159","18161","18163","18165","18167","18169","18171","18173","18175","18177","18179","18181","18183","26001","26003","26005","26007","26009","26011","26013","26015","26017","26019","26021","26023","26025","26027","26029","26031","26033","26035","26037","26039","26041","26043","26045","26047","26049","26051","26053","26055","26057","26059","26061","26063","26065","26067","26069","26071","26073","26075","26077","26079","26081","26083","26085","26087","26089","26091","26093","26095","26097","26099","26101","26103","26105","26107","26109","26111","26113","26115","26117","26119","26121","26123","26125","26127","26129","26131","26133","26135","26137","26139","26141","26143","26145","26147","26149","26151","26153","26155","26157","26159","26161","26163","26165","27001","27003","27005","27007","27009","27011","27013","27015","27017","27019","27021","27023","27025","27027","27029","27031","27033","27035","27037","27039","27041","27043","27045","27047","27049","27051","27053","27055","27057","27059","27061","27063","27065","27067","27069","27071","27073","27075","27077","27079","27081","27083","27085","27087","27089","27091","27093","27095","27097","27099","27101","27103","27105","27107","27109","27111","27113","27115","27117","27119","27121","27123","27125","27127","27129","27131","27133","27135","27137","27139","27141","27143","27145","27147","27149","27151","27153","27155","27157","27159","27161","27163","27165","27167","27169","27171","27173","39001","39003","39005","39007","39009","39011","39013","39015","39017","39019","39021","39023","39025","39027","39029","39031","39033","39035","39037","39039","39041","39043","39045","39047","39049","39051","39053","39055","39057","39059","39061","39063","39065","39067","39069","39071","39073","39075","39077","39079","39081","39083","39085","39087","39089","39091","39093","39095","39097","39099","39101","39103","39105","39107","39109","39111","39113","39115","39117","39119","39121","39123","39125","39127","39129","39131","39133","39135","39137","39139","39141","39143","39145","39147","39149","39151","39153","39155","39157","39159","39161","39163","39165","39167","39169","39171","39173","39175","55001","55003","55005","55007","55009","55011","55013","55015","55017","55019","55021","55023","55025","55027","55029","55031","55033","55035","55037","55039","55041","55043","55045","55047","55049","55051","55053","55055","55057","55059","55061","55063","55065","55067","55069","55071","55073","55075","55077","55078","55079","55081","55083","55085","55087","55089","55091","55093","55095","55097","55099","55101","55103","55105","55107","55109","55111","55113","55115","55117","55119","55121","55123","55125","55127","55129","55131","55133","55135","55137","55139","55141"],["Adams County","Alexander County","Bond County","Boone County","Brown County","Bureau County","Calhoun County","Carroll County","Cass County","Champaign County","Christian County","Clark County","Clay County","Clinton County","Coles County","Cook County","Crawford County","Cumberland County","DeKalb County","De Witt County","Douglas County","DuPage County","Edgar County","Edwards County","Effingham County","Fayette County","Ford County","Franklin County","Fulton County","Gallatin County","Greene County","Grundy County","Hamilton County","Hancock County","Hardin County","Henderson County","Henry County","Iroquois County","Jackson County","Jasper County","Jefferson County","Jersey County","Jo Daviess County","Johnson County","Kane County","Kankakee County","Kendall County","Knox County","Lake County","La Salle County","Lawrence County","Lee County","Livingston County","Logan County","McDonough County","McHenry County","McLean County","Macon County","Macoupin County","Madison County","Marion County","Marshall County","Mason County","Massac County","Menard County","Mercer County","Monroe County","Montgomery County","Morgan County","Moultrie County","Ogle County","Peoria County","Perry County","Piatt County","Pike County","Pope County","Pulaski County","Putnam County","Randolph County","Richland County","Rock Island County","St. Clair County","Saline County","Sangamon County","Schuyler County","Scott County","Shelby County","Stark County","Stephenson County","Tazewell County","Union County","Vermilion County","Wabash County","Warren County","Washington County","Wayne County","White County","Whiteside County","Will County","Williamson County","Winnebago County","Woodford County","Adams County","Allen County","Bartholomew County","Benton County","Blackford County","Boone County","Brown County","Carroll County","Cass County","Clark County","Clay County","Clinton County","Crawford County","Daviess County","Dearborn County","Decatur County","De Kalb County","Delaware County","Dubois County","Elkhart County","Fayette County","Floyd County","Fountain County","Franklin County","Fulton County","Gibson County","Grant County","Greene County","Hamilton County","Hancock County","Harrison County","Hendricks County","Henry County","Howard County","Huntington County","Jackson County","Jasper County","Jay County","Jefferson County","Jennings County","Johnson County","Knox County","Kosciusko County","Lagrange County","Lake County","La Porte County","Lawrence County","Madison County","Marion County","Marshall County","Martin County","Miami County","Monroe County","Montgomery County","Morgan County","Newton County","Noble County","Ohio County","Orange County","Owen County","Parke County","Perry County","Pike County","Porter County","Posey County","Pulaski County","Putnam County","Randolph County","Ripley County","Rush County","St. Joseph County","Scott County","Shelby County","Spencer County","Starke County","Steuben County","Sullivan County","Switzerland County","Tippecanoe County","Tipton County","Union County","Vanderburgh County","Vermillion County","Vigo County","Wabash County","Warren County","Warrick County","Washington County","Wayne County","Wells County","White County","Whitley County","Alcona County","Alger County","Allegan County","Alpena County","Antrim County","Arenac County","Baraga County","Barry County","Bay County","Benzie County","Berrien County","Branch County","Calhoun County","Cass County","Charlevoix County","Cheboygan County","Chippewa County","Clare County","Clinton County","Crawford County","Delta County","Dickinson County","Eaton County","Emmet County","Genesee County","Gladwin County","Gogebic County","Grand Traverse County","Gratiot County","Hillsdale County","Houghton County","Huron County","Ingham County","Ionia County","Iosco County","Iron County","Isabella County","Jackson County","Kalamazoo County","Kalkaska County","Kent County","Keweenaw County","Lake County","Lapeer County","Leelanau County","Lenawee County","Livingston County","Luce County","Mackinac County","Macomb County","Manistee County","Marquette County","Mason County","Mecosta County","Menominee County","Midland County","Missaukee County","Monroe County","Montcalm County","Montmorency County","Muskegon County","Newaygo County","Oakland County","Oceana County","Ogemaw County","Ontonagon County","Osceola County","Oscoda County","Otsego County","Ottawa County","Presque Isle County","Roscommon County","Saginaw County","St. Clair County","St. Joseph County","Sanilac County","Schoolcraft County","Shiawassee County","Tuscola County","Van Buren County","Washtenaw County","Wayne County","Wexford County","Aitkin County","Anoka County","Becker County","Beltrami County","Benton County","Big Stone County","Blue Earth County","Brown County","Carlton County","Carver County","Cass County","Chippewa County","Chisago County","Clay County","Clearwater County","Cook County","Cottonwood County","Crow Wing County","Dakota County","Dodge County","Douglas County","Faribault County","Fillmore County","Freeborn County","Goodhue County","Grant County","Hennepin County","Houston County","Hubbard County","Isanti County","Itasca County","Jackson County","Kanabec County","Kandiyohi County","Kittson County","Koochiching County","Lac qui Parle County","Lake County","Lake of the Woods County","Le Sueur County","Lincoln County","Lyon County","McLeod County","Mahnomen County","Marshall County","Martin County","Meeker County","Mille Lacs County","Morrison County","Mower County","Murray County","Nicollet County","Nobles County","Norman County","Olmsted County","Otter Tail County","Pennington County","Pine County","Pipestone County","Polk County","Pope County","Ramsey County","Red Lake County","Redwood County","Renville County","Rice County","Rock County","Roseau County","St. Louis County","Scott County","Sherburne County","Sibley County","Stearns County","Steele County","Stevens County","Swift County","Todd County","Traverse County","Wabasha County","Wadena County","Waseca County","Washington County","Watonwan County","Wilkin County","Winona County","Wright County","Yellow Medicine County","Adams County","Allen County","Ashland County","Ashtabula County","Athens County","Auglaize County","Belmont County","Brown County","Butler County","Carroll County","Champaign County","Clark County","Clermont County","Clinton County","Columbiana County","Coshocton County","Crawford County","Cuyahoga County","Darke County","Defiance County","Delaware County","Erie County","Fairfield County","Fayette County","Franklin County","Fulton County","Gallia County","Geauga County","Greene County","Guernsey County","Hamilton County","Hancock County","Hardin County","Harrison County","Henry County","Highland County","Hocking County","Holmes County","Huron County","Jackson County","Jefferson County","Knox County","Lake County","Lawrence County","Licking County","Logan County","Lorain County","Lucas County","Madison County","Mahoning County","Marion County","Medina County","Meigs County","Mercer County","Miami County","Monroe County","Montgomery County","Morgan County","Morrow County","Muskingum County","Noble County","Ottawa County","Paulding County","Perry County","Pickaway County","Pike County","Portage County","Preble County","Putnam County","Richland County","Ross County","Sandusky County","Scioto County","Seneca County","Shelby County","Stark County","Summit County","Trumbull County","Tuscarawas County","Union County","Van Wert County","Vinton County","Warren County","Washington County","Wayne County","Williams County","Wood County","Wyandot County","Adams County","Ashland County","Barron County","Bayfield County","Brown County","Buffalo County","Burnett County","Calumet County","Chippewa County","Clark County","Columbia County","Crawford County","Dane County","Dodge County","Door County","Douglas County","Dunn County","Eau Claire County","Florence County","Fond du Lac County","Forest County","Grant County","Green County","Green Lake County","Iowa County","Iron County","Jackson County","Jefferson County","Juneau County","Kenosha County","Kewaunee County","La Crosse County","Lafayette County","Langlade County","Lincoln County","Manitowoc County","Marathon County","Marinette County","Marquette County","Menominee County","Milwaukee County","Monroe County","Oconto County","Oneida County","Outagamie County","Ozaukee County","Pepin County","Pierce County","Polk County","Portage County","Price County","Racine County","Richland County","Rock County","Rusk County","St. Croix County","Sauk County","Sawyer County","Shawano County","Sheboygan County","Taylor County","Trempealeau County","Vernon County","Vilas County","Walworth County","Washburn County","Washington County","Waukesha County","Waupaca County","Waushara County","Winnebago County","Wood County"],["IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IL","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","IN","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","MN","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","OH","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI","WI"],[50.34221707,51.56442981,47.05420741,49.50144862,36.25592417,50.20104789,49.58715596,46.13948097,48.94524769,50.17381453,46.53068549,49.64869657,49.96550931,47.78780243,50.73811888,51.13326856,47.49676306,49.63192561,50.30728709,49.96734161,50.13920526,50.43680048,50.78804844,51.2765607,49.62855062,44.78760854,50.08679900000001,50.05101767,47.74840253,51.0607621,49.87554716,49.64461454,50.2254509,49.80282997,48.51264943,49.9593562,49.88331027,50.37963208,50.05606553000001,49.46808511,48.59615385,50.58363927000001,49.57257101,40.4753008,49.78956867,50.46759809,49.90382794,48.95764803,49.6131989,49.22000777,43.7240177,46.72949657,49.26100053,48.86375992,50.31458248000001,49.78845025,50.95622907000001,51.79783806,50.16612047,50.98384016000001,50.46052988,49.76879603,50.09413241,51.32412205,50.85388993999999,49.35500516,49.79019781,47.11634547,49.3247229,50.42937932,49.81402504,51.20218855,44.89994171,50.08072714,49.84120409000001,48.77984085,49.90983771,49.03086863,46.73739524,50.21056041000001,50.51968882,51.37550411,50.47862433,51.66089218,45.90868663,50.35490605,49.99277491,49.37324602,51.25266463,50.33368999,49.69284905,49.73388446,50.34725354,50.08560597,49.32932639,50.18271169,50.4701043,50.05305719,49.96533942,49.6454007,50.96283329,49.70362988,49.83919264,50.65794011,49.46133589,49.28317468,50.78446178,49.82336444,49.71740527,48.82023838,49.53915823000001,50.9002954,50.02843171,50.01370155,48.69020501,49.63791968,49.72623098,49.70472441,49.98056299,51.61250011000001,49.53703704,50.25810817000001,50.36618271,51.11257031,49.89742971,49.70904985,49.38259458,49.08616979,51.70094817,49.35496356,50.6345209,50.39725533,49.53953477,49.72333921,47.2615762,51.2886783,50.05429766,49.34341253,49.86929479,49.663333,51.38408303999999,49.25188844,50.23343909,48.75240996,49.7636899,48.69573729,51.23446784,47.98567271,49.82088364000001,49.46563031,51.52372543,49.54459121,48.55656432,45.69994954,50.0855129,49.07375957,49.99584695,48.70143963,49.40781557,49.75466143,49.54390256,49.38087701,51.9335329,45.27967471,49.22748192,50.42364881,49.65885967,49.53944734,47.20784966,49.93247944,49.87107643,50.43483476,51.05607676,50.76866764,49.72327799,49.15610758,49.46685012,48.64506839,45.07014998,47.54147511,48.62466020999999,49.33923573,50.50345224,51.01143849,49.75729726,49.46984132999999,51.0509926,49.56860891,50.49474572,49.74489796,51.21693601,50.10411152,49.65037808,49.55670431,49.29442258,43.88554559,49.60316806,50.20626061999999,49.88659326,48.67784479,44.70218678,49.34229158999999,50.45370109,49.51631415,50.74231524,48.49879859,50.59682344000001,49.69554306000001,49.83455673,49.27139553,45.03623288,49.57897423,50.32853488,48.34334,49.79178574,48.99513025,50.52022167,50.06878786999999,51.46759938,49.2420709,48.62071374,50.40014927999999,46.07055961,49.87107207,45.38139598,49.67677931,51.00947527,44.66314419,49.66498178,49.75907761000001,50.9441867,48.51811128,50.91146481,48.75701243,50.278493,49.31192661,44.67206606,48.46249155,50.11368605,49.18684753,49.50831205,47.91744841,49.3921945,50.96551685,48.04444972,49.39469855,50.09690911,49.51620825,48.25066621,50.30714439,48.85952804,50.06715550000001,46.34229532,48.24955586,49.67349135,49.12156585,50.53256144,48.7672858,49.75679542,48.43936551,48.99888287,48.81009043,49.53595383,50.22983119,49.44989148000001,49.35043023,51.19205650000001,49.8423363,49.50225055,49.56834002,49.79237909,50.19993532,49.06223439,49.98018285,50.09361967,51.48103945,49.65785472,49.15044028000001,49.54292097,49.67063414,49.46045856,49.35484649,48.95023328,49.47939854000001,49.50044707,46.87534053,49.73553629,48.49715419,49.74763921,47.88404497,50.07508077,48.79176783,49.91240364,49.61253963,49.90139518,50.23604855,49.23502216,49.52354543,49.39681172,49.29018399,49.73631096,49.71986754,49.21773142,50.17256279,49.31914894000001,49.00273224,48.98541906,49.29100763,48.28666734,49.42598554,49.38981271999999,49.56885932,49.18101993,48.73673195,48.49620623,47.66210282,48.75313003999999,48.88888889,49.83374238,49.65953042,48.66741742,48.94481436,49.97455471,48.28907048,49.06158358,49.12398528,49.19282511,49.54094293,49.42365204,47.98833554,49.03559668,50.97853919999999,49.30517689,49.77970386000001,46.79073558,50.12292892,49.54280694,48.7096492,50.83210138,48.58027878,49.70379533,48.46127367,48.28711979,50.28835063,47.71122155,49.59605476999999,49.72171887,48.26430215,48.77298562,49.24410087,49.93047757,49.2061845,49.06201948,47.89725116,48.79389313,49.75990396,49.87069267,51.00301699000001,50.17288121,49.81489842,47.00787402,49.9939367,48.97468294999999,49.0723171,49.99270605,49.89961925,50.35740979,48.71874162,49.92624493,49.68442587,48.16437436,50.19001831999999,50.51155965,49.17288721,50.13046061999999,50.94970741,50.28865539,50.3288533,49.01155097,49.92753821,50.55392321999999,51.90353718,49.99708902,49.66087936,49.91515536999999,50.66106495,49.93308696,50.75071951,50.78081736,49.85179389,49.84175038,49.74284846,50.22379730999999,49.95012862,51.35696945,50.27183714,49.71067859,50.0695507,50.07633033,50.3814155,49.89590064,49.57422843,49.94159882,50.11354569,50.9233639,50.3584825,50.82556224,50.89933455,50.33497097,49.98479583,50.35729192,51.33566002,45.82452917,50.82832526999999,46.73277436,50.20216662,49.71095635,49.10975725,50.24807931,49.23681427,51.52802439000001,49.85367281,49.42414896,50.80301464,40.16044646,49.80989544,49.63480301,49.52931229,47.62674308,49.86854286,50.55921358,49.88915164,49.51360168,48.58082174,47.57721327,49.83039869,50.27426102,49.59181432,49.49759812,50.98575902,51.22023132,50.60929113,50.0375257,51.24517923000001,50.41190169999999,49.45483486000001,49.35462691,50.58997301,49.91978311,49.88268034,50.36096419,50.26197431,45.98605484,49.37340233,49.62534423,49.03660886,49.99888904,49.07773878,48.61469829,49.14640161,47.95006511,48.95506039,48.7378207,47.61042044,49.89449193,47.34827032,50.04258665,49.35212033,49.2891722,50.29343767,48.12286689,50.29951077,49.48299755,48.25649427,49.22588005,49.45369407,49.10119422,49.14845758,46.32367057,49.61997575,46.41926599,50.25533766,48.95505019,50.79056312,48.97197369,49.06181298,49.00620242,49.39264771,49.36429928,48.93064685,48.2730211,51.15558732,51.32938048,49.01212345,48.2274872,49.10237622,49.63227449,50.23707383,48.56950067,49.83541804,48.91596841,49.16852852,48.16277594,50.31912829,49.24517262,50.21272705,48.62540533,49.54226856,49.8776168,48.83345008,49.26869833,49.04065648,48.78097622,48.93362245,49.32710882,48.31460674,49.6299108,49.648158,49.8925106,50.2784857,48.98617154,46.78987159,49.23558149,50.22096685],[66.28509292,56.30107527,61.49490374,66.90504888,46.98974837,69.05921965,73.13984169,69.14261094,63.67664670999999,61.71840031,62.45519368,69.48856549,67.57605495999999,65.47131148000001,54.65006648000001,65.37601644999999,62.47928406,70.26506024,61.18467345000001,65.74354772999999,60.68055556,74.71587102000001,59.32681868,68,74.04859085999999,59.66182142,68.84158416,62.13844871000001,60.34008683,68.04071247,60.78086872,71.75,67.95275590999999,66.78291815,64.92492492000001,66.49042844,67.88930085,66.81753216,50.48606466,76.38356164,59.64359150000001,69.22006379,72.94804436999999,64.33783108,66.21434079000001,60.82271924,74.74034698,59.31821094000001,70.69686264000001,64.0466089,50.54000788,60.65100795,62,57.67462039,49.98982706,73.39618416,67.45125401999999,61.44563324,67.72483789,67.06227536,60.77632724000001,69.52799121999999,63.35205993,62.82157676,73.11873351,73.67854183999999,79.22082786999999,60.39155301,56.30378816,62.35783633999999,68.50586701,62.92233337,59.4852071,77.7672209,66.02159467999999,61.35401975,61.95985832,74.17943107000001,58.39607843,67.50104646,63.44008363,65.26431101,59.65498651999999,69.96059574,69.25531915000001,70.45045045000001,71.57988166,68.88888889,63.44748201,68.11541307,67.88388083,54.54451256,63.88349515,61.7167382,72.06566346999999,67.61752988000001,69.03255814000001,64.57891012,71.19236719999999,65.01738794000001,62.25000609,73.8907085,58.77559462000001,63.31473507,63.52559607,64.0311284,57.91125541,80.64482362,72.66181229999999,61.49611399,56.01916697,65.39978527,61.18204489,58.91264786,60.1459854,52.20087336,66.37813808,61.75923599000001,60.27329955,52.30193184,70.19184266000001,53.54664555000001,56.70489509999999,70.17290583,62.90665616,69.46454414,61.40986908,63.80181603,52.4406256,59.05332533999999,84.45387663,73.97172901,65.43573161,72.4975426,55.21134156000001,64.43581001000001,63.15621678999999,60.32612104,61.19019375,54.99512512,57.97633136,58.22718631,67.85679941000001,55.9238561,61.90986939,40.53755242,61.35367708,58.38642946,59.55247132,51.79817982,58.44737967,60.19332427000001,65.07273877,52.14555936000001,54.37489237,59.33413835,67.09156694000001,61.82926828999999,56.05374617,64.87341772000001,58.76247505,60.40866118,53.59572029,58.12729089999999,64.55630514000001,66.72502892,66.91607685,60.35343035,56.2514828,59.30886685999999,66.39218423,61.65565488,58.27606261,55.28548124,59.34689031,68.11511701000001,58.93470790000001,59.40819702,54.1970473,51.47459727,51.96974105,68.5472973,62.92682927,55.71961544000001,62.39366138,52.27725147,59.40900754,69.38712179999999,72.89947204000001,56.47359851,54.66377012,67.28927203000001,62.6951151,67.62711863999999,78.4017758,67.07652059999999,77.42210939,74.08426108,84.38624339,72.14869281,59.16483516,76.37736652,73.41903253,85.12322109999999,70.80697834,63.67751938,65.8627714,64.7308642,80.70258723000001,75.13257575999999,58.81646941,66.52093972999999,79.52049112,69.65883916999999,73.81259815,72.08003952999999,75.74119863,83.45061148000001,71.09797813,71.46072914,66.98541329,82.40782543,58.91575543,65.54711674000001,67.27636364,73.80704564,66.10568678,64.9375,73.70112736999999,73.55362947,51.59768501999999,66.02784469000001,71.85790159,75.98999284999999,77.37765347999999,87.71830986000001,64.32349949,76.71013330999999,94.33435668,69.8442816,85.64012792,57.87849566,79.40011319,75.08750608,72.87419194,69.43193402,75.39436311999999,59.86632537,67.65226724,76.28875592999999,76.06429192,74.70255443000001,65.53695386,74.11764706,69.95648719,73.00362853999999,83.26003664,72.57806452,70.31000886,74.58823529,68.45641310000001,73.01872659,76.40176029,78.76056206999999,78.49482596,74.42021803999999,69.69384315000001,73.93807975,62.92600518,70.02339729000001,71.29977461,73.33644946999999,70.54384284000001,70.24363930999999,77.89723747000001,68.3413035,71.51527016,76.06221547999999,81.325039,75.37296037,69.83975747,75.74004764,76.84754522,69.33551303,75.55498193,74.35298412,89.98101695,78.83189655,76.33949192,80.90334659,68.35365207000001,70.85026336,87.19358534,75.81626319,79.42467378000001,85.9076913,81.16550117,81.56962025,75.37142856999999,77.30659025999999,73.92527473,81.12181303,80.13157895000001,83.21250881,78.76075731,77.61149356,80.34145533,74.54673027999999,76.51545036,72.68580417,76.00260205000001,79.48795181,70.30980193000001,76.80608365000001,82.92458261,80.40066778000001,79.01338971,72.69544924,70.76289791000001,77.60148285,61.03311258,71.31101813000001,71.48701299,77.97694523999999,74.98213373999999,77.96691249999999,71.08212383,77.59112519999999,74.09918636,66.40000000000001,70.58461538,82.15489728999999,80.83277815,67.97758057,68.35113199,75.88325653,66.78372591,80.06841505,76.2257591,72.8358209,73.08337009,74.19443177000001,73.05220061,74.85714286000001,74.19383259999999,74.73490059,85.46514452,80.10370904,77.71954022999999,71.93064270000001,79.01271503000001,69.37244202000001,74.29184549,72.80065897999999,71.5547025,78.27617059000001,76.73163418,74.71413161,87.6345103,70.5220339,70.14314927999999,66.85447164,84.85715755999999,74.8037889,57.9022646,61.34560092,64.29267105000001,58.53487139,47.74022167,74.71594203000001,60.67296232,62.98253471,66.55866838,65.81153045000001,66.40731505000001,62.29638613,70.58297397,64.35804985,61.34727776,59.99641577,64.22229121000001,65.69334635,69.76218023,66.9927411,87.63076495,68.75479417,71.47784308,58.61956774,67.37653595,71.1673699,60.10017422,78.30724070000001,68.03776336,60.23459442,71.02425276,67.68680168,55.47319933,64.32773109,71.72212775999999,60.27262981,62.59452116999999,42.84957802,62.13436929,59.87049777,62.84637845,66.36651870999999,72.89173113000001,60.46866601999999,70.64602001999999,67.60595979,66.20702706,61.75865784,57.10382514,65.78522450999999,54.4543408,76.86301569,61.55705453,79.07154742,71.85869228,65.18923849000001,66.66873580000001,59.46157185999999,68.13215208999999,61.08385539,54.35304198999999,72.90312785,66.52846100000001,60.5373026,62.22295586999999,58.28598263,64.17967086,68.89590902,79.50908002,63.78622707,55.41059988,66.75693674,54.50633557,60.64379699,69.75421154,65.74757618,67.52934377999999,64.02599049,62.75753903,78.4449396,69.57229196,59.673429,80.82187712999999,66.93344478,62.73678128,66.37366548,66.21963166,67.41639538000001,69.43595769999999,72.76277524,72.47926794,87.63592429000001,74.98346914,75.69975787,80.45220150999999,81.66113838,72.37539019,62.53095488,76.40198511,67.71806854,84.68194321999999,69.96894186,88.32930845,71.63134977999999,65.88432992999999,71.25825385,80.65843620999999,72.81526232,70.37604456999999,63.36261289,75.86744639,73.79668049999999,77.19724138000001,83.19502075,64.37420985999999,73.32314511,65.15684410999999,71.38731346,76.62337662,72.35171862999999,69.35549250000001,73.09328968999999,73.49966585,72.72712524000001,74.83157022,70.76994148,73.57954545,51.79153093999999,67.8238832,66.53229365999999,77.01111295000001,82.76464543,77.17235221,89.36269166000001,72.76558385,70.38031995,77.00686232,72.64156007,78.11700182999999,73.01165981,67.19344018,70.52505474,70.78994614,85.06262657000001,75.06323865,78.99285983,70.96015061,75.89215912,69.38961039,71.80205415,70.62763362,84.46826051000001,72.97605473,81.84542587,84.23317871,87.11209348,72.79770086000001,69.33060807,70.48347200000001,73.34694965],[64725,4858,16566,53154,6330,32828,4360,15529,12657,206542,33436,15229,13047,36909,46334,5109292,18536,10324,100232,15310,19755,920901,16433,6071,34325,21305,13249,37242,33021,4855,11651,53041,7984,17244,3597,6151,48419,26473,52617,9212,36400,21246,21758,13381,514182,106074,137254,48640,709150,108078,14914,33848,35521,27591,26861,311747,171141,101483,44245,263864,36914,11678,12748,13896,12121,15504,35033,28020,32209,14323,51351,178383,20588,16723,14484,3770,4991,5572,30068,15435,141527,252671,23087,194534,6746,4790,20761,5345,43627,129911,16767,72337,11087,16354,13643,15872,13614,54658,696757,66695,282188,38128,36068,391449,83540,8719,11919,74164,15570,20555,37540,124237,26379,32843,10536,33418,51138,26416,43731,112031,43632,206890,23349,80714,16574,23028,20327,32993,66022,31006,364921,83070,39851,182534,48915,83574,36834,46300,33281,20198,32946,27536,165782,35789,80826,40866,499689,111675,45222,131744,969466,46332,9803,35674,139745,38273,72236,13823,47367,6114,19623,21482,16369,19183,12168,174791,25063,12485,37301,24437,29087,16673,272234,24588,44991,19967,23258,34725,20670,10006,188717,15361,6952,179744,15451,106006,30828,8461,65185,28224,66273,28335,24598,34627,10417,8807,121210,28847,24249,15089,8277,63554,102821,18297,152900,44531,133289,51403,26293,25940,36293,31352,79748,13491,36741,25874,108992,34163,401983,25728,14319,96464,41100,45762,37035,31248,284108,66809,25521,11622,64447,160066,261173,18182,659083,2180,12594,88780,22870,98567,196161,5330,10941,874195,25287,66661,29409,40720,23266,83674,15213,155609,67433,9569,176565,50886,1269431,26973,20970,5863,23274,8404,25644,300873,13361,23708,188330,160151,60874,40657,8188,68022,52945,75692,366376,1757043,34196,16126,368864,35371,46799,41463,5144,69631,25723,36708,110034,31274,12284,57988,65929,8649,5708,11356,67948,443341,20981,39668,13926,21414,30718,48013,6136,1260121,18800,21960,42727,45205,9893,16463,43839,4059,11844,6689,10939,3871,29153,5580,25262,36714,5328,8861,19650,23496,27280,34246,40140,8060,34441,21947,6377,164020,60519,13845,29446,9355,30731,11431,536413,3874,15361,14525,67693,9537,15292,199532,154520,100824,14955,160405,37398,9637,9755,25538,3275,21658,14307,18893,275912,11075,6350,49478,148003,9486,27420,101115,52181,97014,58979,45948,65509,43680,388420,26659,38709,134831,210805,41964,100511,36571,41522,1236041,51529,38187,226296,74501,162898,28839,1321820,42171,29068,95469,168456,38098,825037,74861,30416,14378,27512,43391,27858,44390,58218,32586,64330,63183,231842,56653,181359,46040,316268,426643,43540,225636,64642,183512,21969,42348,110247,13234,533892,13668,35339,86113,14335,39978,18757,35480,60023,27005,161745,40596,34334,125319,76606,58667,72194,54632,47671,372657,535882,200643,91937,66898,28769,12565,249778,58901,116559,36652,131592,21567,21226,16039,46843,16608,270036,13391,17036,52718,66807,34691,58193,16007,568203,88282,30526,44144,45651,106837,4688,103836,9381,51276,36816,19220,23865,6224,20836,85784,26866,167817,20623,120294,16877,19559,28376,81172,137958,41988,15779,4197,918661,46109,39633,38212,192127,93009,7410,42532,45709,70718,14179,195846,17090,164060,14186,96017,65777,18559,40886,117841,19975,30899,31060,23763,105380,16911,137688,410434,51488,24999,170718,73993],[33.93826916,96.94656488999999,59.55156951,29.39679689,100,54.98435807999999,100,100,51.98589173,15.95074442,50.68758815,100,63.92986153,80.21626602000001,26.32567271,0.05478110999999999,67.16098292,100,21.75662219,52.80355762,74.96453901,0.18780611,50.69370331,100,59.64578285,62.25800447,66.54352002,59.1947942,60.79323991,100,100,25.02807759,100,84.02951192,100,99.4676687,49.8011525,82.74919674,40.94838978,100,58.80688707,59.41335069,88.39119582000001,100,4.02248113,28.40412271,11.37037515,32.26129245,1.41528848,31.59915373,69.68586386999999,53.17908918000001,64.59583973000001,50.01250580999999,42.52147735,14.08959188,21.55784597,17.03013519,65.51915849,16.43916512,47.79347452,100,100,52.88305456,100,100,41.49934214,53.23105204,36.19018684,69.61310752999999,67.8728663,16.94274872,71.67343041000001,64.10364062000001,100,100,100,100,78.98750124,45.34876368,11.54404446,14.15578866,65.15062269000001,18.88429941,100,100,76.5412101,100,45.92202554,21.82225166,64.81094874,39.53739149,38.71138104,45.41728542,99.31691010999999,70.54206069999999,63.48634431,43.55102261,4.87481242,41.03465221,9.69405993,70.16143708,70.84252562,12.91870995,30.69409303,100,49.34775429,27.19171892,100,94.56810795,46.20015844,21.33071276,59.99773294000001,49.45766797,100,61.29534765,60.21034353,52.67074645,52.97353519,23.05925668,47.59951417,23.25752124,38.45200444,34.05148849,100,88.86109282,64.19433594,74.72660628,38.56525782,82.80037659,5.74068904,27.6753507,85.63574923,15.24074879,62.06607515,25.66042698,52.11663303,47.77504954,83.26447536000001,68.92274635999999,47.36476906,74.88139644,12.7345223,45.4274847,48.36365902,100,4.53679567,36.52116673,67.93672658,24.62248999,0.87944879,73.36153596,100,45.55920138,21.19626677,52.91280051,54.10002786,100,77.69138378,100,100,100,99.37484526,54.29838289,100,23.57936668,70.41075252,100,72.25398899999999,66.56599461,81.36575271999999,61.38371538000001,10.0193469,68.92224408999999,52.59127733,100,100,63.15957600999999,76.58644377,100,15.65145959,61.54046487,100,7.956766,58.65664875,24.76708148,50.14850207,100,26.74105606,76.52047406,37.69927727,63.28601845,61.39014906,69.08543184,92.90842923,100,67.57813148,46.63922233,100,87.54166111000001,100,87.11853003,28.939108,85.5147468,30.09668472,69.41509517999999,32.34234234,74.10300645,69.80118216,78.84983776,51.12953649999999,87.69769251,51.31938126,99.83831229,42.66319811,35.24877635,37.98488665,63.13027674,18.1991625,100,64.08205841,43.17289317,58.29362324,76.73676387,45.21024598,100,14.56756757,61.01730435,49.75234774,100,52.26573904,47.28433708,21.63870524,100,16.18863359,100,100,85.94996558,87.58351643,56.86108848,39.5128594,100,74.67232786,3.20999254,67.66938319,45.49888665,59.09748038,74.47751423,63.16909199000001,43.21627901,100,37.72132111,84.59032636000001,100,26.01351351,89.6654528,5.54223769,100,100,100,100,100,66.21896296999999,21.19885213,100,43.87228782,32.61503019,39.50605738,63.71945716,93.64457905,100,59.78353453,89.90491908,78.05178139,17.19479501,0.8968192300000001,63.74543403000001,100,15.90246423,70.91208822,67.87877477000001,45.03492110000001,100,33.57304086,48.15143563,63.50705665,24.65067993,100,57.20749325,65.65585206999999,25.79227778,100,100,100,68.71436564999999,4.98110857,63.34403604,51.39978465,100,100,41.76403949,66.91185743,100,2.3880958,71.01841533,100,59.28284916,77.01159639000001,100,100,42.96167566,100,45.4899685,100,100,100,85.7745693,100,46.54319522,44.49974164,100,100,58.11735331,71.92735043,81.84738652,72.32872685000001,36.34864723,100,25.21042549,38.08882907,100,17.36845014,77.91980826,36.44939966,100,100,46.53436779,62.84046693000001,0.02009588,100,70.12641815000001,100,32.18772821,50.45342127,100,39.2876228,18.1020089,50.92866036,100,37.98865388,29.74923809,47.98883259,100,99.42205684,100,81.18015616999999,71.84500533000001,51.43926613000001,13.36632183,100,47.95573316999999,40.34144672,39.16808762,100,100,30.97567657,63.38017427,51.98720971,48.69696145,38.70578605,61.50954178,95.79631834,9.6106897,100,70.61786434,25.38510746,26.26928922,70.14136799000001,55.49731539,66.31159183000001,34.08447353,0.5655363600000001,71.7295349,53.57310766,20.32934188,28.18888683,35.58938089,48.08814894,1.37263211,82.1529745,80.36618754,78.55383293,22.42477644,62.46682970000001,2.38202155,31.80859584,56.42428981,100,67.94158050999999,73.71932498,70.60962567,100,51.42661999,64.23912045,39.27416512,69.71827618,7.51022128,45.27815934,33.78071802,55.63380282,14.26362137,4.985172009999999,66.16009493,15.64339892,34.68688321,34.05929742,88.02791535,71.59518435,30.58267601,98.66268211000001,5.523637239999999,100,99.98855508,51.04617521,100,62.46655436,100,80.45921826,60.45542288,81.65608386999999,37.99593302,76.25795751,84.22977562,33.65403086,58.84580961,43.24741918,55.33861204,45.59915742,57.01015965000001,14.75831859,3.78200241,27.17784698,49.84506181,45.0066896,50.42342124,94.3203125,17.51734155,58.33765538,55.84033398,75.10107271999999,30.07077612,69.73515982000001,100,54.9198228,78.25779795,100,16.59001265,100,100,52.62957172,62.52168273000001,100,66.24209266999999,63.00502700000001,13.5769291,54.88612466,68.63899421000001,38.61383903,62.53961268,23.72717813,100,36.25688884,100,77.20743964,71.08618877000001,72.64696603,79.34117845999999,67.15007333,79.12035942,44.50058893,100,13.08298503,100,18.10918665,100,58.59114463,66.50008798,42.77461621,43.38866629,60.76136798,100,100,0.27695907,56.77270172999999,100,74.26872771000001,25.39314648,24.3117712,100,69.9540415,100,36.60570925,100,14.34705427,71.54415164,20.03885464,100,63.98819706,44.70446908,100,70.08634818,29.35933714,79.34012955999999,100,86.83336589,100,36.90527621,100,38.35888886,15.20770164,63.64162742,99.6451876,17.41396378,35.47778511],["Female","Female","Male","Male","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Female","Female","Male","Male","Female","Male","Female","Female","Female","Female","Male","Male","Female","Female","Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Female","Male","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Female","Female","Female","Female","Female","Male","Female","Female","Female","Male","Male","Male","Male","Female","Male","Female","Male","Female","Male","Male","Male","Male","Male","Female","Female","Female","Female","Female","Male","Female","Male","Male","Female","Female","Male","Male","Female","Female","Male","Female","Female","Female","Male","Male","Female","Male","Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Female","Female","Male","Male","Male","Male","Male","Female","Male","Female","Female","Female","Male","Male","Male","Male","Female","Male","Female","Female","Male","Male","Male","Female","Female","Male","Male","Male","Female","Male","Female","Male","Male","Male","Female","Male","Male","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Female","Male","Male","Male","Male","Male","Female","Female","Female","Male","Male","Male","Male","Male","Male","Male","Male","Female","Female","Male","Male","Female","Male","Female","Male","Female","Female","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Female","Male","Female","Male","Female","Male","Male","Male","Male","Male","Female","Male","Male","Male","Female","Female","Female","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Female","Male","Female","Male","Female","Male","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Female","Male","Male","Female","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Female","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Female","Male","Male","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Female","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Female","Female","Male","Female","Female","Female","Female","Male","Male","Female","Female","Male","Male","Male","Female","Male","Female","Female","Male","Male","Male","Female","Male","Female","Female","Male","Female","Female","Female","Male","Male","Male","Female","Female","Female","Female","Female","Female","Male","Female","Female","Male","Female","Male","Female","Male","Male","Female","Male","Female","Male","Male","Female","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Female","Male","Male","Female","Female","Female","Female","Female","Female","Male","Male","Female","Male","Male","Female","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Female","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Female","Male","Male","Male","Male","Male","Male","Male","Female","Female","Male","Male","Male","Male","Female","Male","Male","Male","Male","Male","Female","Male","Female","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Male","Female","Male","Male","Male","Female"],["Mixed","Rural","Mixed","Mixed","Rural","Mixed","Rural","Rural","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Rural","Mixed","Rural","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Urban","Mixed","Urban","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Urban","Mixed","Urban","Mixed","Rural","Rural","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Rural","Rural","Rural","Rural","Mixed","Mixed","Urban","Urban","Mixed","Urban","Rural","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Urban","Mixed","Urban","Mixed","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Rural","Rural","Rural","Mixed","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Rural","Urban","Mixed","Rural","Urban","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Urban","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Urban","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Urban","Rural","Rural","Rural","Rural","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Urban","Urban","Mixed","Rural","Urban","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Rural","Rural","Mixed","Urban","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Rural","Urban","Mixed","Rural","Mixed","Mixed","Rural","Rural","Mixed","Rural","Mixed","Rural","Rural","Rural","Mixed","Rural","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Urban","Rural","Mixed","Rural","Mixed","Mixed","Rural","Mixed","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Rural","Rural","Mixed","Mixed","Mixed","Urban","Rural","Mixed","Mixed","Mixed","Rural","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Urban","Urban","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Rural","Rural","Mixed","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Urban","Urban","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Mixed","Rural","Urban","Rural","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Urban","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Urban","Rural","Urban","Rural","Mixed","Mixed","Mixed","Mixed","Mixed","Rural","Rural","Urban","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Rural","Urban","Mixed","Mixed","Rural","Mixed","Mixed","Rural","Mixed","Mixed","Mixed","Rural","Mixed","Rural","Mixed","Rural","Mixed","Urban","Mixed","Rural","Urban","Mixed"],[42903,2735,10187,35562,2974,22670,3188,10737,8059,127474,20882,10582,8816,24164,25321,3340251,11581,7254,61326,10065,11987,688059,9749,4128,25417,12710,9120,23141,19924,3303,7081,38056,5425,11516,2335,4089,32871,17688,26564,7036,21710,14706,15872,8609,340462,64517,102584,28852,501346,69220,7537,20529,22023,15913,13427,228810,115436,62356,29964,176953,22434,8119,8076,8729,8862,11423,27753,16921,18134,8931,35178,112242,12246,13005,9562,2313,3092,4133,17558,10418,89784,164903,13772,136097,4671,3374,14860,3682,27680,88489,11382,39455,7082,10093,9831,10732,9398,35297,496037,43363,175662,28173,21199,247844,53069,5582,6902,59809,11313,12640,21029,81250,16139,19348,6336,17444,33944,16314,26358,58594,30626,110782,13240,56639,10426,15996,12482,21050,34622,18310,308189,61448,26076,132332,27006,53851,23262,27930,20364,11107,19100,16033,112494,20014,50039,16566,306577,65203,26930,68240,566627,27888,6379,18602,75986,22708,48464,8546,26550,3966,11530,12976,8773,11150,7855,116629,16771,7535,20982,14493,19311,10279,158647,13593,26700,13600,13707,20629,11202,5150,98075,10529,4374,100152,9640,55417,18314,5870,47519,15939,36227,19066,15421,23417,8167,5907,93843,21371,20462,10886,4897,48540,75490,15574,108263,28356,87787,33273,21219,19489,21346,20855,63416,9397,27119,18649,82551,28509,285801,18385,9591,79493,24214,29995,24915,23063,187811,43384,18809,8548,33253,105688,187673,13816,509982,1912,8100,68103,21574,68843,167992,3084,8687,656411,18427,46284,22172,24377,15739,63833,11571,116243,44193,7092,123518,37148,1056928,19576,14744,4373,15932,6136,19592,236969,10487,17643,131254,118412,38305,28469,5838,49884,37349,53168,285396,1200786,24455,12265,299978,26660,32684,31404,3953,48279,19435,27293,99009,24653,9377,46914,45064,6127,4977,8609,53967,380864,17029,32357,10496,16554,22708,38949,4916,1048578,14807,17043,34327,33698,7569,11966,33318,3226,8327,5137,9071,3112,23034,4056,17876,28490,3251,6318,14047,18321,20455,26700,28532,6253,25520,14572,4501,134750,48919,9411,20126,7098,20523,9152,408884,2821,11226,10776,49451,7139,11345,149120,132060,80763,11622,115380,29549,6685,7247,18591,2343,16953,10977,14115,241794,7810,4454,33078,125591,7095,15876,62029,33548,56787,28156,34330,39746,27510,258527,17544,25705,83994,148792,27007,61660,21941,26666,811996,35947,25582,198304,51223,116435,16905,890596,30011,17469,74759,114613,22948,585976,50671,16872,9249,19732,26152,17437,19020,36173,19509,40429,41932,168993,34257,128122,31125,209391,263488,24863,148435,35200,141052,13523,33485,79222,8627,355939,8127,24077,52601,7791,29145,12478,21478,37348,15740,103807,27968,27298,79936,42447,39164,39350,33130,33252,245012,361877,128463,57697,52478,20015,7497,201875,39424,73125,24327,87139,14539,14738,11670,33951,14554,202482,10136,13705,43050,48351,21692,44460,10839,481165,61769,26963,31620,30076,76130,3781,75608,6601,32489,27931,14183,18423,5178,13413,62899,17505,119800,15802,87034,11705,14296,20856,59034,103236,29714,11610,2173,623071,30677,30521,31626,148268,83115,5391,29934,35199,51370,11076,142990,11483,115703,10042,81674,49374,14660,29012,89432,13860,22186,21936,20072,76902,13840,115978,357537,37482,17331,120327,54271]],"container":"<table class=\"cell-border stripe\">\n  <thead>\n    <tr>\n      <th>County Name<\/th>\n      <th>State<\/th>\n      <th>Percent Female Population<\/th>\n      <th>Percent Voter Turnout<\/th>\n      <th>Population<\/th>\n      <th>Percent Rural Population<\/th>\n      <th>Majority Gender<\/th>\n      <th>Ruralness<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"bPaginate":false,"dom":"ftp","language":{"info":"Showing _TOTAL_ entries"},"paging":true,"lengthMenu":[25,50,100],"pageLength":10,"scrollY":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,9]},{"name":"fipscode","targets":0},{"name":"county","targets":1},{"name":"state","targets":2},{"name":"female_raw","targets":3},{"name":"voter_turnout","targets":4},{"name":"county_population","targets":5},{"name":"rural_raw","targets":6},{"name":"gender","targets":7},{"name":"urban","targets":8},{"name":"votes","targets":9}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+
+
+<div id="3ade8a4a-fb1d-4a6c-8409-ac45482d5fc9" class="hidden html-fill-item html-fill-container">
+
+</div>
+</div>
+</div>
+</div>
+</div></div><aside id="bslib-sidebar-1" class="sidebar html-fill-container html-fill-item"><div class="html-fill-container html-fill-item">
+<p>This dashboard displays statistics from:</p>
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><strong>States</strong></td>
+<td>IL, IN, MI, MN, OH, WI</td>
+</tr>
+<tr class="even">
+<td><strong>Counties</strong></td>
+<td>524</td>
+</tr>
+<tr class="odd">
+<td><strong>Years</strong></td>
+<td>CHR: 2024</td>
+</tr>
+<tr class="even">
+<td><strong>Voter Data</strong></td>
+<td>2016 &amp; 2020</td>
+</tr>
+<tr class="odd">
+<td><strong>% Female</strong></td>
+<td>2022</td>
+</tr>
+<tr class="even">
+<td><strong>% Rural</strong></td>
+<td>2020</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>The breakdown of 524 counties across these states is:</p>
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><strong>Illinois (IL)</strong></td>
+<td>102</td>
+</tr>
+<tr class="even">
+<td><strong>Indiana (IN)</strong></td>
+<td>92</td>
+</tr>
+<tr class="odd">
+<td><strong>Michigan (MI)</strong></td>
+<td>83</td>
+</tr>
+<tr class="even">
+<td><strong>Minnesota (MN)</strong></td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td><strong>Ohio (OH)</strong></td>
+<td>88</td>
+</tr>
+<tr class="even">
+<td><strong>Wisconsin (WI)</strong></td>
+<td>72</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Disclaimer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Analyses performed are representative of counties rather than individuals, meaning that associations of demographics and predictors are representative of county trends, which may not sufficiently include nuance to draw causal conclusions.</p>
+<p>For multiple comparisons, insignificant comparisons are not shown to reduce clutter.</p>
+</div>
+</div>
+</div>
+</div></aside>
+<button class="collapse-toggle" type="button" title="Toggle sidebar" aria-expanded="true" aria-controls="bslib-sidebar-1">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" class="bi bi-chevron-left collapse-icon" style="fill:currentColor;" aria-hidden="true" role="img">
+      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"></path>
+    </svg>
+</button>
+<script data-bslib-sidebar-init="">
+bslib.Sidebar.initCollapsibleAll()
+</script>
+</div>
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+<script type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (_event) {
+  if (window.bslib.Card) {
+    window.bslib.Card.initializeAllCards();
+  }
+}); 
+</script>
+  
+
+
+
+</body></html>
