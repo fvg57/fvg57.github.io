@@ -1,0 +1,32 @@
+# This file controls the settings for your Quarto template from www.marvinschmitt.com
+
+# website settings
+website:
+  title: "County Health Rankings Analysis"
+  description: "Dashboard and Blog"
+
+project:
+  type: website
+  output-dir: docs
+
+  preview: 
+    port: 22223
+    browser: true
+    watch-inputs: true
+    navigate: true
+
+execute:
+  freeze: true
+
+format:
+  html:
+    fontsize: 1.1em
+    theme: 
+      - pulse
+      - html/styles.scss
+    toc: false
+    code-link: true
+    anchor-sections: true
+    fig-cap-location: margin
+    reference-location: margin
+    footnotes-hover: true

@@ -1,0 +1,1185 @@
+---
+title: "County Health Rankings Dashboard"
+autor: "Francine Graham"
+date: last-modified
+format: 
+  dashboard:
+    nav-buttons: [github]
+    github: https://github.com/fvg57/dashboard
+theme: default
+fig-width: 10
+fig-asp: 0.3
+params: 
+  year: "2024"
+  threshold_diff: 0.02
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r install_packages}
+#install.packages('ggsignif')
+#install.packages('ggpmisc')
+```
+
+```{r, message=FALSE, warning=FALSE}
+#library(nhanesA) #this does not work
+#library(patchwork)
+library(mosaic)
+library(sessioninfo)
+library(janitor)
+library(naniar)
+library(DT)
+library(ggpmisc)
+library(datawizard)
+library(knitr)
+library(bootstrap)
+library(scales)
+library(ggsignif)
+library(easystats)
+library(dplyr)
+library(boot)
+library(tidyverse)
+theme_set(theme_light())
+knitr::opts_chunk$set(comment=NA)
+```
+
+```{r ingest_data, message=FALSE}
+data_url <-
+  "https://www.countyhealthrankings.org/sites/default/files/media/document/analytic_data2024.csv"
+chr_2024_raw<-read_csv(data_url,skip=1,guess_max=4000,show_col_types=FALSE) |>
+  select(fipscode,county,state,county_clustered,year,ends_with("rawvalue")) |>
+  filter(county_clustered==1)
+```
+
+```{r selection}
+# Data are from County Health Rankings used in Project A, primarily because I know that this data should work
+
+# State Selection
+# I will be focusing exclusively on the Midwest states that border the Great Lakes (OH,IN,IL,MN,WI,MI)
+chr_2024_state<-chr_2024_raw|>
+    filter(state=="OH"|state=="WI"|state=="IN"|state=="IL"|state=="MI"|state=="MN")
+
+# Variable Selection
+# I will use state as a categorical variable across analyses and compare means of several variables
+# for further analysis, I will "bin" certain demographics, to have those function as categorical variables (eg: counties that are mostly male (<50% female) and counties that are mostly female (>50% female))
+
+# select state, % female, rural, voter turnout, and population
+chr_2024_filtered<-chr_2024_state|>
+  select(fipscode,county,state,starts_with("v057"),
+  starts_with("v177"),starts_with("v051"),starts_with("v058"))
+```
+
+```{r clean_data}
+# rename variables
+chr_2024<-chr_2024_filtered|>
+  rename(female_raw=v057_rawvalue,rural_raw=v058_rawvalue,
+  voter_turnout=v177_rawvalue,county_population=v051_rawvalue)
+num_obs<-nrow(chr_2024)
+num_il<-nrow(chr_2024|>filter(state=="IL"))
+num_in<-nrow(chr_2024|>filter(state=="IN"))
+num_mi<-nrow(chr_2024|>filter(state=="MI"))
+num_mn<-nrow(chr_2024|>filter(state=="MN"))
+num_oh<-nrow(chr_2024|>filter(state=="OH"))
+num_wi<-nrow(chr_2024|>filter(state=="WI"))
+
+# bin counties
+chr_2024<-chr_2024|>
+  mutate(
+    gender=case_when(
+      female_raw>0.5~"Female",
+      female_raw<0.5~"Male"
+    ),
+    # pick a coefficient that allows a nonzero number of counties in each category
+    county_size=case_when(
+      county_population>mean(county_population)+0.3*sd(county_population)~"Large",
+      county_population<mean(county_population)-0.3*sd(county_population)~"Small",
+      TRUE~"Average"
+    ),
+    urban=case_when(
+      rural_raw>0.9~"Rural",
+      rural_raw<0.2~"Urban",
+      TRUE~"Mixed"
+    ),
+    female_raw=case_when(female_raw<1.1~female_raw*100,TRUE~female_raw),
+    rural_raw=case_when(rural_raw<1.1~rural_raw*100,TRUE~rural_raw),
+    voter_turnout=case_when(voter_turnout<1.1~voter_turnout*100,TRUE~voter_turnout)
+  )
+
+```
+
+#  {.sidebar}
+
+This dashboard displays statistics from:
+
+|              |                        |
+|--------------|------------------------|
+| **States**   | IL, IN, MI, MN, OH, WI |
+| **Counties** | `{r} num_obs`          |
+| **Years**    | CHR: 2024              |
+|**Voter Data**| 2016 & 2020            |
+| **% Female** | 2022                   |
+| **% Rural**  | 2020                   |
+
+------------------------------------------------------------------------
+
+The breakdown of `{r} num_obs` counties across these states is:
+
+|                    |              |
+|--------------------|--------------|
+| **Illinois (IL)**  | `{r} num_il` |
+| **Indiana (IN)**   | `{r} num_in` |
+| **Michigan (MI)**  | `{r} num_mi` |
+| **Minnesota (MN)** | `{r} num_mn` |
+| **Ohio (OH)**      | `{r} num_oh` |
+| **Wisconsin (WI)** | `{r} num_wi` |
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true"}
+## Disclaimer
+
+Analyses performed are representative of counties rather than individuals, meaning that associations of demographics and predictors are representative of county trends, which may not sufficiently include nuance to draw causal conclusions.
+
+For multiple comparisons, insignificant comparisons are not shown to reduce clutter.
+:::
+
+# Overview
+
+```{r}
+#| label: all-values
+#| results: hide
+
+
+chr_2024<-chr_2024|>
+  mutate(
+    votes=floor(voter_turnout/100*county_population),
+    rural_voters=floor(voter_turnout/100*county_population*rural_raw/100),
+    female_voters=floor(voter_turnout/100*county_population*female_raw/100),
+    
+)
+overall_turnout<-sum(chr_2024$votes)/sum(chr_2024$county_population)
+
+```
+
+## Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Total Population"
+
+list(
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(chr_2024$county_population)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Total Voter Turnout"
+
+list(
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(overall_turnout)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Rural Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)(sum(chr_2024$rural_voters)/sum(chr_2024$county_population))
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Female Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)(sum(chr_2024$female_voters)/sum(chr_2024$county_population))
+)
+```
+
+## Row {height="40%"}
+
+### Column {width="30%"}
+
+```{r}
+#| title: State Turnouts
+
+il_chr<-chr_2024|>filter(state=="IL")
+in_chr<-chr_2024|>filter(state=="IN")
+mi_chr<-chr_2024|>filter(state=="MI")
+mn_chr<-chr_2024|>filter(state=="MN")
+oh_chr<-chr_2024|>filter(state=="OH")
+wi_chr<-chr_2024|>filter(state=="WI")
+
+il_turnout<-sum(il_chr$votes)/sum(il_chr$county_population)
+in_turnout<-sum(in_chr$votes)/sum(in_chr$county_population)
+mi_turnout<-sum(mi_chr$votes)/sum(mi_chr$county_population)
+mn_turnout<-sum(mn_chr$votes)/sum(mn_chr$county_population)
+oh_turnout<-sum(oh_chr$votes)/sum(oh_chr$county_population)
+wi_turnout<-sum(wi_chr$votes)/sum(wi_chr$county_population)
+
+overview_vote_table<-data.frame(
+  state=c("Illinois","Indiana","Michigan","Minnesota","Ohio","Wisconsin"),
+  state_turnout=c(label_percent(accuracy=0.1)(il_turnout),label_percent(accuracy=0.1)(in_turnout),
+                  label_percent(accuracy=0.1)(mi_turnout),label_percent(accuracy=0.1)(mn_turnout),
+                  label_percent(accuracy=0.1)(oh_turnout),label_percent(accuracy=0.1)(wi_turnout)),
+  state_proportion=c(label_percent(accuracy=0.1)(sum(il_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(in_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(mi_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(mn_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(oh_chr$votes)/sum(chr_2024$votes)),
+                     label_percent(accuracy=0.1)(sum(wi_chr$votes)/sum(chr_2024$votes))))
+colnames(overview_vote_table)<-c("State","Voter Turnout","Proportion of Votes")
+print(overview_vote_table)
+
+
+```
+
+### Column {width="35%"}
+
+```{r}
+#| title: Proportion of Votes by County Ruralness
+# utilize binning of counties by ruralness (reminder: 90-100% rural="Rural",0-20% rural="Urban",20-90% rural ="Mixed")
+urban_voting<-chr_2024%>%group_by(urban)%>%summarise(votes=sum(county_population))
+
+ggplot(data=urban_voting,aes(x=urban,y=votes))+
+  geom_bar(stat="identity",fill="#8826b9")+
+  labs(x="County Ruralness",y="Number of Votes")
+```
+
+### Column {width="35%"}
+
+```{r}
+#| title: Voter Turnout by Ruralness
+
+chr_2024$urban<-factor(chr_2024$urban)
+ggplot(data=chr_2024,aes(x=urban,y=voter_turnout,fill=urban))+
+  geom_boxplot()+
+  labs(x="County Ruralness",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("Urban","Rural"),c("Rural","Mixed")),map_signif_level=TRUE)+
+  geom_signif(comparisons=list(c("Urban","Mixed")),map_signif_level=TRUE,y_position=105)+
+  ylim(0,110)+theme_bw()+
+  scale_fill_manual(values=c("grey50","grey90","grey10"))
+```
+
+## Row {.tabset height="40%"}
+
+```{r}
+#| title: State Voting by Ruralness
+
+ggplot()+
+  geom_point(data=il_chr,aes(x=rural_raw,y=log10(votes),color="Illinois"))+
+  geom_point(data=in_chr,aes(x=rural_raw,y=log10(votes),color="Indiana"))+
+  geom_point(data=mi_chr,aes(x=rural_raw,y=log10(votes),color="Michigan"))+
+  geom_point(data=mn_chr,aes(x=rural_raw,y=log10(votes),color="Minnesota"))+
+  geom_point(data=oh_chr,aes(x=rural_raw,y=log10(votes),color="Ohio"))+
+  geom_point(data=wi_chr,aes(x=rural_raw,y=log10(votes),color="Wisconsin"))+
+  geom_smooth(data=chr_2024,aes(x=rural_raw,y=log10(votes)),method="lm",formula='y~x',color="black")+
+  stat_poly_eq(data=chr_2024,aes(x=rural_raw,y=log10(votes)))+
+  labs(x="Percent Rural Population",y="log10(Number of Votes)")+
+  xlim(0,100)+ylim(0,10)
+```
+
+```{r}
+#| title: State Voting by Gender
+
+ggplot()+
+  geom_point(data=il_chr,aes(x=female_raw,y=log10(votes),color="Illinois"))+
+  geom_point(data=in_chr,aes(x=female_raw,y=log10(votes),color="Indiana"))+
+  geom_point(data=mi_chr,aes(x=female_raw,y=log10(votes),color="Michigan"))+
+  geom_point(data=mn_chr,aes(x=female_raw,y=log10(votes),color="Minnesota"))+
+  geom_point(data=oh_chr,aes(x=female_raw,y=log10(votes),color="Ohio"))+
+  geom_point(data=wi_chr,aes(x=female_raw,y=log10(votes),color="Wisconsin"))+
+  geom_smooth(data=chr_2024,aes(x=female_raw,y=log10(votes)),method="lm",formula='y~x',color="black")+
+  stat_poly_eq(data=chr_2024,aes(x=female_raw,y=log10(votes)))+
+  labs(x="Percent Female Population",y="log10(Number of Votes)")+
+  xlim(35,65)+ylim(0,10)
+```
+
+```{r}
+#| title: Voter Turnout by State
+
+chr_2024$state<-factor(chr_2024$state)
+ggplot(data=chr_2024,aes(x=state,y=voter_turnout,color=state))+
+  geom_boxplot()+
+  labs(x="State",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("IL","IN"),c("MI","MN"),c("OH","WI")),map_signif_level=TRUE,y_position=100)+
+  geom_signif(comparisons=list(c("IN","MI"),c("MN","OH")),map_signif_level=TRUE,y_position=110)+
+  geom_signif(comparisons=list(c("IL","MI"),c("MN","WI")),map_signif_level=TRUE,y_position=120)+
+  geom_signif(comparisons=list(c("IN","MN")),map_signif_level=TRUE,y_position=25)+
+  geom_signif(comparisons=list(c("OH","IN")),map_signif_level=TRUE,y_position=15)+
+  geom_signif(comparisons=list(c("MI","OH")),map_signif_level=TRUE,y_position=130)+
+  geom_signif(comparisons=list(c("MN","IL")),map_signif_level=TRUE,y_position=140)+
+  geom_signif(comparisons=list(c("IN","WI")),map_signif_level=TRUE,y_position=150)+
+  geom_signif(comparisons=list(c("WI","IL")),map_signif_level=TRUE,y_position=35)+
+  ylim(0,155)+theme_bw()
+```
+
+# Illinois {orientation="columns"}
+
+## Column {width="60%"}
+
+### Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Population"
+
+list(
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(il_chr$county_population)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Voter Turnout"
+
+list(
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(il_turnout)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Rural Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(il_chr$rural_voters)/sum(il_chr$county_population)))
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Female Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(il_chr$female_voters)/sum(il_chr$county_population)))
+)
+```
+
+### Row {height="40%"}
+
+```{r}
+#| title: Voter Turnout by Ruralness
+
+il_chr$urban<-factor(il_chr$urban)
+ggplot(data=il_chr,aes(x=urban,y=voter_turnout,fill=urban))+
+  geom_boxplot()+
+  labs(x="County Ruralness",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("Urban","Rural"),c("Rural","Mixed")),map_signif_level=TRUE)+
+  geom_signif(comparisons=list(c("Urban","Mixed")),map_signif_level=TRUE,y_position=95)+
+  ylim(0,100)+theme_bw()+
+  scale_fill_manual(values=c("grey50","grey90","grey10"))
+```
+
+```{r}
+#| title: Voter Turnout by Gender
+
+#male_chr<-il_chr|>filter(gender=="Male")
+#female_chr<-il_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+
+
+il_chr$gender<-factor(il_chr$gender)
+ggplot(data=il_chr,aes(x=gender,y=voter_turnout,fill=gender))+
+  geom_boxplot()+
+  labs(x="County Majority Gender",y="Voter Turnout")+
+  geom_signif(comparisons=list(c("Male","Female")),map_signif_level=TRUE,y_position=105)+
+  ylim(0,110)+theme_bw()+
+  scale_fill_manual(values=c("hotpink1","blue"))
+```
+
+### Row {.tabset height="40%"}
+
+```{r}
+#| title: Gender and County Population
+
+ggplot(data=il_chr,aes(x=female_raw,y=log10(county_population)))+
+  geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="log10(County Population)")+
+  xlim(35,65)+ylim(0,10)
+```
+
+```{r}
+#| title: Gender and County Ruralness
+
+ggplot(data=il_chr,aes(x=female_raw,y=rural_raw))+
+  geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="Percent Rural Population")+
+  xlim(35,65)+ylim(0,100)
+```
+
+```{r}
+#| title: County Ruralness and Population
+
+ggplot(data=il_chr,aes(y=log10(county_population),x=rural_raw))+
+  geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Rural Population",y="log10(County Population)")+
+  ylim(0,10)+xlim(0,100)
+```
+
+## Column {width="40%"}
+
+```{r}
+#| title: Data
+
+il_chr|>
+  select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
+  arrange(county)|>
+  datatable(
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
+               "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(
+      dom="lrtip", 
+      paging=TRUE,
+      lengthMenu=c(5,10,50),
+      pageLength=10, 
+      scrollY=TRUE
+    ),
+  )
+```
+
+# Indiana {orientation="columns"}
+
+## Column {width="60%"}
+
+### Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Population"
+
+list(
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(in_chr$county_population)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Voter Turnout"
+
+list(
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(in_turnout)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Rural Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(in_chr$rural_voters)/sum(in_chr$county_population)))
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Female Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(in_chr$female_voters)/sum(in_chr$county_population)))
+)
+```
+
+### Row {height="40%"}
+
+```{r}
+#| title: Voter Turnout by Ruralness
+
+in_chr$urban<-factor(in_chr$urban)
+ggplot(data=in_chr,aes(x=urban,y=voter_turnout,fill=urban))+
+  geom_boxplot()+
+  labs(x="County Ruralness",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("Urban","Rural"),c("Rural","Mixed")),map_signif_level=TRUE)+
+  geom_signif(comparisons=list(c("Urban","Mixed")),map_signif_level=TRUE,y_position=95)+
+  ylim(0,100)+theme_bw()+
+  scale_fill_manual(values=c("grey50","grey90","grey10"))
+```
+
+```{r}
+#| title: Voter Turnout by Gender
+
+#male_chr<-in_chr|>filter(gender=="Male")
+#female_chr<-in_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+
+
+in_chr$gender<-factor(in_chr$gender)
+ggplot(data=in_chr,aes(x=gender,y=voter_turnout,fill=gender))+
+  geom_boxplot()+
+  labs(x="County Majority Gender",y="Voter Turnout")+
+  geom_signif(comparisons=list(c("Male","Female")),map_signif_level=TRUE,y_position=105)+
+  ylim(0,110)+theme_bw()+
+  scale_fill_manual(values=c("hotpink1","blue"))
+```
+
+### Row {.tabset height="40%"}
+
+```{r}
+#| title: Gender and County Population
+
+ggplot(data=in_chr,aes(x=female_raw,y=log10(county_population)))+
+  geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="log10(County Population)")+
+  xlim(35,65)+ylim(0,10)
+```
+
+```{r}
+#| title: Gender and County Ruralness
+
+ggplot(data=in_chr,aes(x=female_raw,y=rural_raw))+
+  geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="Percent Rural Population")+
+  xlim(35,65)+ylim(0,100)
+```
+
+```{r}
+#| title: County Ruralness and Population
+
+ggplot(data=in_chr,aes(y=log10(county_population),x=rural_raw))+
+  geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Rural Population",y="log10(County Population)")+
+  ylim(0,10)+xlim(0,100)
+```
+
+## Column {width="40%"}
+
+```{r}
+#| title: Data
+
+in_chr|>
+  select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
+  arrange(county)|>
+  datatable(
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
+               "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(
+      dom="lrtip", 
+      paging=TRUE,
+      lengthMenu=c(5,10,50),
+      pageLength=10, 
+      scrollY=TRUE
+    ),
+  )
+```
+
+# Michigan {orientation="columns"}
+
+## Column {width="60%"}
+
+### Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Population"
+
+list(
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(mi_chr$county_population)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Voter Turnout"
+
+list(
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(mi_turnout)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Rural Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(mi_chr$rural_voters)/sum(mi_chr$county_population)))
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Female Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(mi_chr$female_voters)/sum(mi_chr$county_population)))
+)
+```
+
+### Row {height="40%"}
+
+```{r}
+#| title: Voter Turnout by Ruralness
+
+mi_chr$urban<-factor(mi_chr$urban)
+ggplot(data=mi_chr,aes(x=urban,y=voter_turnout,fill=urban))+
+  geom_boxplot()+
+  labs(x="County Ruralness",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("Urban","Rural"),c("Rural","Mixed")),map_signif_level=TRUE)+
+  geom_signif(comparisons=list(c("Urban","Mixed")),map_signif_level=TRUE,y_position=95)+
+  ylim(0,100)+theme_bw()+
+  scale_fill_manual(values=c("grey50","grey90","grey10"))
+```
+
+```{r}
+#| title: Voter Turnout by Gender
+
+#male_chr<-mi_chr|>filter(gender=="Male")
+#female_chr<-mi_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+
+
+mi_chr$gender<-factor(mi_chr$gender)
+ggplot(data=mi_chr,aes(x=gender,y=voter_turnout,fill=gender))+
+  geom_boxplot()+
+  labs(x="County Majority Gender",y="Voter Turnout")+
+  geom_signif(comparisons=list(c("Male","Female")),map_signif_level=TRUE,y_position=105)+
+  ylim(0,110)+theme_bw()+
+  scale_fill_manual(values=c("hotpink1","blue"))
+```
+
+### Row {.tabset height="40%"}
+
+```{r}
+#| title: Gender and County Population
+
+ggplot(data=mi_chr,aes(x=female_raw,y=log10(county_population)))+
+  geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="log10(County Population)")+
+  xlim(35,65)+ylim(0,10)
+```
+
+```{r}
+#| title: Gender and County Ruralness
+
+ggplot(data=mi_chr,aes(x=female_raw,y=rural_raw))+
+  geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="Percent Rural Population")+
+  xlim(35,65)+ylim(0,100)
+```
+
+```{r}
+#| title: County Ruralness and Population
+
+ggplot(data=mi_chr,aes(y=log10(county_population),x=rural_raw))+
+  geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Rural Population",y="log10(County Population)")+
+  ylim(0,10)+xlim(0,100)
+```
+
+## Column {width="40%"}
+
+```{r}
+#| title: Data
+
+mi_chr|>
+  select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
+  arrange(county)|>
+  datatable(
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
+               "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(
+      dom="lrtip", 
+      paging=TRUE,
+      lengthMenu=c(5,10,50),
+      pageLength=10, 
+      scrollY=TRUE
+    ),
+  )
+```
+
+# Minnesota {orientation="columns"}
+
+## Column {width="60%"}
+
+### Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Population"
+
+list(
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(mn_chr$county_population)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Voter Turnout"
+
+list(
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(mn_turnout)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Rural Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(mn_chr$rural_voters)/sum(mn_chr$county_population)))
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Female Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(mn_chr$female_voters)/sum(mn_chr$county_population)))
+)
+```
+
+### Row {height="40%"}
+
+```{r}
+#| title: Voter Turnout by Ruralness
+
+mn_chr$urban<-factor(mn_chr$urban)
+ggplot(data=mn_chr,aes(x=urban,y=voter_turnout,fill=urban))+
+  geom_boxplot()+
+  labs(x="County Ruralness",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("Urban","Rural"),c("Rural","Mixed")),map_signif_level=TRUE)+
+  geom_signif(comparisons=list(c("Urban","Mixed")),map_signif_level=TRUE,y_position=95)+
+  ylim(0,100)+theme_bw()+
+  scale_fill_manual(values=c("grey50","grey90","grey10"))
+```
+
+```{r}
+#| title: Voter Turnout by Gender
+
+#male_chr<-mn_chr|>filter(gender=="Male")
+#female_chr<-mn_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+
+
+mn_chr$gender<-factor(mn_chr$gender)
+ggplot(data=mn_chr,aes(x=gender,y=voter_turnout,fill=gender))+
+  geom_boxplot()+
+  labs(x="County Majority Gender",y="Voter Turnout")+
+  geom_signif(comparisons=list(c("Male","Female")),map_signif_level=TRUE,y_position=105)+
+  ylim(0,110)+theme_bw()+
+  scale_fill_manual(values=c("hotpink1","blue"))
+```
+
+### Row {.tabset height="40%"}
+
+```{r}
+#| title: Gender and County Population
+
+ggplot(data=mn_chr,aes(x=female_raw,y=log10(county_population)))+
+  geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="log10(County Population)")+
+  xlim(35,65)+ylim(0,10)
+```
+
+```{r}
+#| title: Gender and County Ruralness
+
+ggplot(data=mn_chr,aes(x=female_raw,y=rural_raw))+
+  geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="Percent Rural Population")+
+  xlim(35,65)+ylim(0,100)
+```
+
+```{r}
+#| title: County Ruralness and Population
+
+ggplot(data=mn_chr,aes(y=log10(county_population),x=rural_raw))+
+  geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Rural Population",y="log10(County Population)")+
+  ylim(0,10)+xlim(0,100)
+```
+
+## Column {width="40%"}
+
+```{r}
+#| title: Data
+
+mn_chr|>
+  select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
+  arrange(county)|>
+  datatable(
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
+               "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(
+      dom="lrtip", 
+      paging=TRUE,
+      lengthMenu=c(5,10,50),
+      pageLength=10, 
+      scrollY=TRUE
+    ),
+  )
+```
+
+# Ohio {orientation="columns"}
+
+## Column {width="60%"}
+
+### Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Population"
+
+list(
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(oh_chr$county_population)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Voter Turnout"
+
+list(
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(oh_turnout)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Rural Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(oh_chr$rural_voters)/sum(oh_chr$county_population)))
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Female Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(oh_chr$female_voters)/sum(oh_chr$county_population)))
+)
+```
+
+### Row {height="40%"}
+
+```{r}
+#| title: Voter Turnout by Ruralness
+
+oh_chr$urban<-factor(oh_chr$urban)
+ggplot(data=oh_chr,aes(x=urban,y=voter_turnout,fill=urban))+
+  geom_boxplot()+
+  labs(x="County Ruralness",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("Urban","Rural"),c("Rural","Mixed")),map_signif_level=TRUE)+
+  geom_signif(comparisons=list(c("Urban","Mixed")),map_signif_level=TRUE,y_position=95)+
+  ylim(0,100)+theme_bw()+
+  scale_fill_manual(values=c("grey50","grey90","grey10"))
+```
+
+```{r}
+#| title: Voter Turnout by Gender
+
+#male_chr<-oh_chr|>filter(gender=="Male")
+#female_chr<-oh_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+
+
+oh_chr$gender<-factor(oh_chr$gender)
+ggplot(data=oh_chr,aes(x=gender,y=voter_turnout,fill=gender))+
+  geom_boxplot()+
+  labs(x="County Majority Gender",y="Voter Turnout")+
+  geom_signif(comparisons=list(c("Male","Female")),map_signif_level=TRUE,y_position=105)+
+  ylim(0,110)+theme_bw()+
+  scale_fill_manual(values=c("hotpink1","blue"))
+```
+
+### Row {.tabset height="40%"}
+
+```{r}
+#| title: Gender and County Population
+
+ggplot(data=oh_chr,aes(x=female_raw,y=log10(county_population)))+
+  geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="log10(County Population)")+
+  xlim(35,65)+ylim(0,10)
+```
+
+```{r}
+#| title: Gender and County Ruralness
+
+ggplot(data=oh_chr,aes(x=female_raw,y=rural_raw))+
+  geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="Percent Rural Population")+
+  xlim(35,65)+ylim(0,100)
+```
+
+```{r}
+#| title: County Ruralness and Population
+
+ggplot(data=oh_chr,aes(y=log10(county_population),x=rural_raw))+
+  geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Rural Population",y="log10(County Population)")+
+  ylim(0,10)+xlim(0,100)
+```
+
+## Column {width="40%"}
+
+```{r}
+#| title: Data
+
+oh_chr|>
+  select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
+  arrange(county)|>
+  datatable(
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
+               "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(
+      dom="lrtip", 
+      paging=TRUE,
+      lengthMenu=c(5,10,50),
+      pageLength=10, 
+      scrollY=TRUE
+    ),
+  )
+```
+
+# Wisconsin {orientation="columns"}
+
+## Column {width="60%"}
+
+### Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Population"
+
+list(
+  #icon="clipboard2-pulse",
+  color="primary",
+  value=sum(wi_chr$county_population)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Voter Turnout"
+
+list(
+  #icon="file-medical",
+  color="secondary",
+  value=label_percent(accuracy=0.1)(wi_turnout)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Rural Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="green4",
+  value=label_percent(accuracy=0.1)((sum(wi_chr$rural_voters)/sum(wi_chr$county_population)))
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Estimated Female Voter Turnout"
+
+list(
+  #icon="clipboard2-pulse",
+  color="orange",
+  value=label_percent(accuracy=0.1)((sum(wi_chr$female_voters)/sum(wi_chr$county_population)))
+)
+```
+
+### Row {height="40%"}
+
+```{r}
+#| title: Voter Turnout by Ruralness
+
+wi_chr$urban<-factor(wi_chr$urban)
+ggplot(data=wi_chr,aes(x=urban,y=voter_turnout,fill=urban))+
+  geom_boxplot()+
+  labs(x="County Ruralness",y="Percent Voter Turnout")+
+  geom_signif(comparisons=list(c("Urban","Rural"),c("Rural","Mixed")),map_signif_level=TRUE)+
+  geom_signif(comparisons=list(c("Urban","Mixed")),map_signif_level=TRUE,y_position=95)+
+  ylim(0,100)+theme_bw()+
+  scale_fill_manual(values=c("grey50","grey90","grey10"))
+```
+
+```{r}
+#| title: Voter Turnout by Gender
+
+#male_chr<-wi_chr|>filter(gender=="Male")
+#female_chr<-wi_chr|>filter(gender=="Female")
+#t.test(male_chr$voter_turnout,female_chr$voter_turnout)
+
+
+in_chr$gender<-factor(in_chr$gender)
+ggplot(data=wi_chr,aes(x=gender,y=voter_turnout,fill=gender))+
+  geom_boxplot()+
+  labs(x="County Majority Gender",y="Voter Turnout")+
+  geom_signif(comparisons=list(c("Male","Female")),map_signif_level=TRUE,y_position=105)+
+  ylim(0,110)+theme_bw()+
+  scale_fill_manual(values=c("hotpink1","blue"))
+```
+
+### Row {.tabset height="40%"}
+
+```{r}
+#| title: Gender and County Population
+
+ggplot(data=wi_chr,aes(x=female_raw,y=log10(county_population)))+
+  geom_point(color="darkred")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="County Population")+
+  xlim(35,65)+ylim(0,10)
+```
+
+```{r}
+#| title: Gender and County Ruralness
+
+ggplot(data=wi_chr,aes(x=female_raw,y=rural_raw))+
+  geom_point(color="darkblue")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Female Population",y="Percent Rural Population")+
+  xlim(35,65)+ylim(0,100)
+```
+
+```{r}
+#| title: County Ruralness and Population
+
+ggplot(data=wi_chr,aes(y=log10(county_population),x=rural_raw))+
+  geom_point(color="darkgreen")+
+  geom_smooth(method="lm",formula=y~x)+
+  stat_poly_eq()+
+  labs(x="Percent Rural Population",y="log10(County Population)")+
+  ylim(0,10)+xlim(0,100)
+```
+
+## Column {width="40%"}
+
+```{r}
+#| title: Data
+
+wi_chr|>
+  select(-state,-fipscode,-county_size,-rural_voters,-female_voters)|>
+  arrange(county)|>
+  datatable(
+    colnames=c("Percent Female Population","Percent Voter Turnout","Population",
+               "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(
+      dom="lrtip", 
+      paging=TRUE,
+      lengthMenu=c(5,10,50),
+      pageLength=10, 
+      scrollY=TRUE
+    ),
+  )
+```
+
+# Data
+
+```{r all_data}
+chr_2024|>
+  select(-county_size,-rural_voters,-female_voters)|>
+  arrange(fipscode)|>
+  datatable(
+    colnames=c("County Name","State","Percent Female Population","Percent Voter Turnout","Population",
+               "Percent Rural Population","Majority Gender","Ruralness"),
+    rownames=FALSE,
+    class='cell-border stripe',
+    options=list(dom='ftp',
+      paging=TRUE,
+      lengthMenu=c(25,50,100),
+      pageLength=10, 
+      scrollY=TRUE)
+    )
+```

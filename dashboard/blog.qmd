@@ -1,0 +1,55 @@
+---
+title: "County Health Rankings Blog"
+---
+
+::: {Blog}
+:::
+
+# Dashboard Main Page
+
+## Setup
+In order to perform analyses related to the voting impact of counties and states, I set up a variable "votes", which was calculated using the population of the county multiplied by the percent voter turnout for the county. This is an imperfect estimate of the actual number of votes, as it does not exclude ineligible populations, such as those under 18 or those incarcerated, however it should still roughly demonstrate the trends I hope to analyze of relative voting impact by gender and ruralness, so I am moving forward with this while acknowledging imperfect representation.
+
+I set up bins for counties to fall into based on the percent of their population that is rural, so as to indicate which counties are dominated by cities within the county, which counties have a substantial mix of rural and urban populations, and which counties are primarily rural. I also set up bins based on the majority gender of the county, so that I could draw comparisons between these two groups. I additionally set up a bin for county size based on population which I ended up not using due to its similarity to the urban/rural binning. I also set up different data sets for each state in my analysis in this section. I chose the states for this analysis so that they would all be Midwest states with a border of one of the Great Lakes. The rationale for this was that they should all be relatively culturally similar to Ohio, where Case Western is located.
+
+## Valueboxes (Top Row)
+The valueboxes along the top of the dashboard are the same across each state as well as the overview. For each page, they indicate the total population considered, percent of the population who voted, percent of the population who were rural voters, and percent of the population who were female voters for the corresponding region or state. The population was included to indicate the number of people included in the counties for that region. Voter turnout was determined by using the weight of each county's population multiplied by the voter turnout for the county, then divided by the population for the region. Rural and Female Voter Turnout was determined by multiplying the population of each county by its voter turnout and then by the percent of the population that is rural or female respectively, then dividing by total population. This is roughly an indicator of how much of an impact these two demographics have on the region, but it is not a perfect analysis, as it does not account for the population who is not eligible to vote, which is why these are labeled as estimates.
+
+## State Turnouts
+This is an overview of the voting statistics for each state, where each state's voter turnout is shown alongside the relative proportion of votes that state has in the region. In this way, a rough estimate of the voting impact of each state can be determined. This can be applicable to understanding the relative impact of each state on voting for the region. The data indicates that Illinois, Ohio, and Michigan have a substantially greater impact on voting than Indiana, Minnesota, and Wisconsin, even in spite of lower turnout in Illinois and Ohio than Minnesota and Wisconsin.
+
+## Proportion of Votes by County Ruralness
+This section was determined using the sum of the the votes, calculated as voter turnout multiplied by county population, for each "bin" of county ruralness. Urban counties were defined as those with less than 20% of the population being rural and rural counties were defined as those with more than 90% of their population being rural. Mixed counties were those with a value between these two, indicating a substantial urban and rural population. As the data indicates, a substantial majority of voters live in urban counties. It can also be determined that relatively few votes come from rural counties.
+
+## Voter Turnout by County Ruralness
+This analysis was performed to determine whether there is a significant difference in voter turnout based on county ruralness. It was determined that there was no significant difference in voter turnout between rural and urban counties, which was interesting considering the vast difference in number of votes from each county. However, counties with a mix of urban and rural residents had a significantly lower voter turnout than both rural and urban counties. This analysis was also performed for each state to determine if the general trend holds.
+
+## State Voting by Ruralness
+This graph shows the trend of votes by percent rural population. It seems to demonstrate a trend of decreasing number of votes with higher proportion of the county population living rurally. A log10 adjustment was made to the number of votes so as to linearize the trend and not have the scale be compressed due to counties with extremely high populations. Data are color-coded so as to indicate trends and outliers by state.
+
+## State Voting by Gender
+This graph shows the trend of votes by percent female population. It seems to demonstrate a trend of increasing number of votes with higher proportion of the county population being female. A log10 adjustment was made to the number of votes so as to linearize the trend and not have the scale be compressed due to counties with extremely high populations. This trend skews greatly at extreme low values for percent female population, due to few counties with below 40% female population. Data are color-coded so as to indicate trends and outliers by state.
+
+## Voter Turnout by State
+For this analysis, I wanted to determine whether there was a significant difference in voter turnout for each state. Using an ANOVA, I was able to find that for the majority of state comparisons, there was a significant difference in voter turnout. Two comparisons: IL and OH, and MI and WI were not significantly different, and are excluded from the figure. This suggests greater similarity in voter turnout between the counties in these states.
+
+# Breakdown by State
+I then separated the regions into each state. I kept the analyses for the valueboxes along the top consistent to the overview, just using data for each state instead of overall. The breakdown was utilized as an opportunity to compare values with more depth and determine whether the comparisons found across states hold up when analyzed by state. 
+
+## Voter Turnout by County Ruralness
+Voter turnout by county ruralness was kept consistent to the overview, to determine if the trend across the region was the same for each state. Interestingly, while the comparisons were similar to the region at large for Illinois, all other states varied from the overview's differences between ruralness categories. Notably Wisconsin, Michigan, and Indiana had no significant differences between any of the categories, indicating that the voter turnout was likely not dependent on county ruralness for these states. While for most of the states as well as the overview the difference in voter turnout between rural and urban counties was not significant, in Ohio it was the only difference that was significant. Finally, in Minnesota, there was a significant (p<0.005) increase in voter turnout in urban counties relative to rural and mixed counties.
+
+## Voter Turnout by Gender
+I also wanted to determine if there was a statistical difference in voter turnout of counties based on the majority gender of the county. This analysis was not performed at the regional level because it may be influenced by other factors. At the state level, voter turnout by gender was not significant in any analysis. This indicates that there is no significant difference in voter turnout based on the female population of a given county. This may however be limited by the fact that percent female population of a county has a relatively low spread and is  generally left-skewed. 
+
+## Gender and County Population
+Due to aforementioned reasons for number of votes, county population was scaled with a log10 transformation to linearize and compress the graph. There seems to be a general trend of increasing population with increasing percent female population across all states. This trend is much tighter for counties with a percent female population of roughly 50%, which is where most counties lie. However, since there is a left skew in the data, there are some outliers, which still seem to follow the trend. This seems to follow the "State Voting by Gender" trend shown in the overview, which makes sense, as the number of votes for the county is highly correlated with the county population.
+
+## Gender and County Ruralness
+This trend is definitely less apparent, but there appears to be an inverse correlation between percent female population and percent rural population. This could account for trends in percent female population without considering the percent rural population.
+
+## County Ruralness and Population
+Due to aforementioned reasons for number of votes, county population was scaled with a log10 transformation to linearize and compress the graph. There is a very tight inverse correlation between rural population percent and county population. This seems to follow the "State Voting by Ruralness" trend, as well as the "Proportion of Votes by County Ruralness" section shown in the overview, which makes sense as the number of votes for the county is highly correlated with the county population.
+
+# Data
+A data table of the raw data used for the analysis is provided for display transparency. This is provided for each state analysis as well as for the dashboard as a whole.
