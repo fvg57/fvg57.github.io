@@ -27,10 +27,6 @@ website:
       - icon: envelope
         aria-label: Case email
         href: "mailto:afg34@case.edu"
-      - icon: envelope
-        aria-label: personal email
-        href: "mailto:fvgraham57@gmail.com"  
-  
   
 
 # Don't touch unless you know what you are doing :) ------------
