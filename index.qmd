@@ -4,21 +4,10 @@ about:
   id: about-block
   image: "img/my_image.jpg"
   links:
-#    - icon: twitter
-#      text: Twitter
-#      href: https://twitter.com/MarvinSchmittML
-#    - icon: github
-#      text: Github
-#      href: https://github.com/marvinschmitt
-#    - icon: linkedin
-#      text: LinkedIn
-#      href: https://www.linkedin.com/in/marvin-schmitt-a85b321a2/
     - icon: envelope
       aria-label: email
       href: "mailto:afg34@case.edu"
-    - icon: envelope
-      aria-label: email
-      href: "mailto:fvgraham57@gmail.com"  
+
 ---
 
 ::: {#about-block}
