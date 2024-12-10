@@ -15,10 +15,10 @@ website:
     left:
       - text: "Experience and Education"
         href: experience/index.qmd
-      - text: "Dashboard"
-        href: dashboard/dashboard.qmd
-      - text: "blog"
-        href: dashboard/blog.qmd
+      #- text: "Dashboard"
+      #  href: dashboard/dashboard.qmd
+      #- text: "blog"
+      #  href: dashboard/blog.qmd
       - text: "CV"
         href: cv/index.qmd
     
